@@ -1,7 +1,7 @@
 FROM node:12.18.4
 
 # 이미지 내에서 명령어를 실행할(현 위치로 잡을) 디렉토리 설정
-WORKDIR /home/node/app
+WORKDIR "/home/react/app"
 
 COPY package.json .
 
@@ -10,7 +10,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8080
 # 컨테이너 실행시 실행할 명령어
 CMD ["npm", "start"]
 
