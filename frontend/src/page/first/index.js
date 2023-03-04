@@ -5,6 +5,7 @@ import { questionData } from "../../data/QuestionData";
 import { Question } from "../../components/question";
 import { Label } from "../../components/label";
 import { Comment } from "../../components/comment";
+import { ColorSelect } from "../../components/colorSelect";
 
 const FirstPage = () => {
   const navigate = useNavigate();
@@ -68,6 +69,10 @@ const FirstPage = () => {
           onTextChange={onTextChange}
         />
         <br />
+      </div>
+      <div id="form-color">
+        <label>색깔</label>
+        <ColorSelect />
       </div>
       <div id="form-comment">
         <label>문구</label>
