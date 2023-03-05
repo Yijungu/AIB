@@ -9,7 +9,7 @@ def index(request): # 특정한 경로가 없는 경우 http://127.0.0.1:8000/
     # Http를 이용해서 응답하기 위해 HttpResponse객체를 사용
     return HttpResponse('''
         <html>
-            Hello, Django
+            Hello, Djangoasd asdas
         </html>
     ''')
 
