@@ -24,9 +24,7 @@ from django.urls import path, include
 # urlpatterns 안에는 routing과 관련된 정보가 포함되어있음
 urlpatterns = [
     # 장고가 기본적으로 가지고 있는 관리자 화면으로 이동하기 위한 routing
-    path('admin/', admin.site.urls),
-    path('', include('firstapp.urls'))
-    # admin이 아닌 다른 경로로 접속을 하면 그 접속을 firstapp.ulrs로 위임
+    path('admin/', admin.site.urls)
 
     # firstapp.ulrs로 routing 하기위해
     # 1. include안의 인자를 실행할 app이름.ulrs로 바꾸어주고
