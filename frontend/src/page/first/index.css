@@ -21,6 +21,10 @@
     font-family: "NotoSerifWeb", "Noto Serif CJK Kr", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
+#style.color {
+    display: inline-block;
+}
+
 .form-comment {
     display: flex;
     flex-direction: column;

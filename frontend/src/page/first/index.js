@@ -5,18 +5,17 @@ import { questionData } from "../../data/QuestionData";
 import { Question } from "../../components/question";
 import { Label } from "../../components/label";
 import { Comment } from "../../components/comment";
-import { ColorSelect } from "../../components/colorSelect";
+import { Color } from "../../components/color";
 
 const FirstPage = () => {
   const navigate = useNavigate();
   const [text, setText] = useState({
     first_text: "",
     second_text: "",
-    third_text: "",
   });
   const [comments, setComments] = useState([]);
 
-  const { first_text, second_text, third_text } = text;
+  const { first_text, second_text } = text;
 
   const onTextChange = (e) => {
     const { name, value } = e.target;
@@ -61,21 +60,16 @@ const FirstPage = () => {
           onTextChange={onTextChange}
         />
         <br />
-        <Label q={questionData[2]} /> <br />
-        <Question
-          q={questionData[2]}
-          name="third_text"
-          value={third_text}
-          onTextChange={onTextChange}
-        />
-        <br />
       </div>
       <div id="form-color">
-        <label>색깔</label>
-        <ColorSelect />
+        <label>배너에 종합적으로 사용하고 싶은 색깔은 무엇인가요?</label>
+        <Color />
+        <br />
       </div>
       <div id="form-comment">
-        <label>문구</label>
+        <label>
+          배너에서 사용하고자 하는 문구와 해당 문구의 목적을 선택하세요.
+        </label>
         <Comment onCommentChange={onCommentChange} />
       </div>
       <form>
