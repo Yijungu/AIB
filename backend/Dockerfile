@@ -7,9 +7,8 @@ WORKDIR /usr/src/app
 RUN pip install Django
 RUN django-admin startproject trydjango
 
-
 # 컨테이너 실행시 실행할 명령어
-CMD ["python", "manage.py", "runserver", "react"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # 이미지 생성 명령어 (현 파일과 같은 디렉토리에서) gg
 # docker build -t {이미지명} .
