@@ -7,6 +7,7 @@ services:
     ports:
       - "8080:8080"
   backend:
+    tty: true
     build: ./backend
     # 연결할 외부 디렉토리 : 컨테이너 내 디렉토리
     volumes:
