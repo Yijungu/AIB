@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 import { questionData } from "../../data/QuestionData";
@@ -23,17 +24,30 @@ const FirstPage = () => {
       ...text,
       [name]: value,
     });
-    console.log(text);
   };
 
   const onCommentChange = (newComments) => {
     setComments(newComments);
-    console.log(comments);
   };
 
-  const onClickSubmit = () => {
-    navigate("/second");
-    console.log(text);
+  const onClickSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://127.0.0.1:8000/", {
+        concept: text.first_text,
+        include: text.second_text,
+      })
+      .then(() => {
+        axios
+          .get("http://127.0.0.1:8000")
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      });
+    // navigate("/second");
   };
 
   return (
