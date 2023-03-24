@@ -18,13 +18,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-#include 함수를 사용하기 위해 import
-
 
 # urlpatterns 안에는 routing과 관련된 정보가 포함되어있음
 urlpatterns = [
     # 장고가 기본적으로 가지고 있는 관리자 화면으로 이동하기 위한 routing
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('', include('firstapp.urls')),
 
     # firstapp.ulrs로 routing 하기위해
     # 1. include안의 인자를 실행할 app이름.ulrs로 바꾸어주고
