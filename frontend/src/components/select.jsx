@@ -22,6 +22,7 @@ export const Select = () => {
 
   const onOptionChange = (e) => {
     setSelectedOption(e.target.value);
+    console.log(e.target);
     console.log(selectedOption);
   };
 

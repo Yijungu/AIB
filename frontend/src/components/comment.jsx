@@ -14,7 +14,7 @@ export const Comment = (props) => {
   const addComment = () => {
     const newComments = [...comments, ""];
     setComments(newComments);
-    props.onCommentChange(newComments, selectedOptions);
+    props.onContentsChange(newComments, selectedOptions);
   };
 
   const deleteComment = (index) => {
@@ -24,21 +24,21 @@ export const Comment = (props) => {
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions.splice(index, 1);
     setSelectedOptions(newSelectedOptions);
-    props.onCommentChange(newComments, newSelectedOptions);
+    props.onContentsChange(newComments, newSelectedOptions);
   };
 
   const onTextChange = (index, e) => {
     const newComments = [...comments];
     newComments[index] = e.target.value;
     setComments(newComments);
-    props.onCommentChange(newComments, selectedOptions);
+    props.onContentsChange(newComments, selectedOptions);
   };
 
   const onSelectedOptionChange = (index, e) => {
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions[index] = e.target.value;
     setSelectedOptions(newSelectedOptions);
-    props.onCommentChange(comments, newSelectedOptions);
+    props.onContentsChange(comments, newSelectedOptions);
   };
 
   return (
@@ -50,8 +50,8 @@ export const Comment = (props) => {
             onChange={(e) => onSelectedOptionChange(index, e)}
           />
           <TextareaAutosize
-            id=""
-            className="comment-outline"
+            id="comment-textareaauto"
+            className="textareaauto"
             minRows={5}
             cols={100}
             value={comment || ""}

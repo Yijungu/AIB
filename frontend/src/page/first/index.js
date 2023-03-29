@@ -15,7 +15,8 @@ const FirstPage = (props) => {
     second_text: "",
   });
   const [selectColor, setSelectColor] = useState("");
-  const [comments, setComments] = useState([]);
+  const [contents, setContents] = useState([]);
+  const [commentList, setCommentList] = useState({ select: "", comment: "" });
 
   const { first_text, second_text } = text;
 
@@ -32,18 +33,19 @@ const FirstPage = (props) => {
     console.log(selectColor);
   };
 
-  const onCommentChange = (newComments) => {
-    setComments(newComments);
+  const onContentsChange = (newContents) => {
+    setContents(newContents);
   };
 
   const onClickSubmit = (e) => {
     e.preventDefault();
+    console.log("contents: ", contents);
     axios
       .post("http://localhost:8000/review", {
         concept: text.first_text,
         include: text.second_text,
         color: selectColor,
-        comments: comments,
+        contents: contents,
       })
       .then((response) => {
         console.log(response);
@@ -61,7 +63,7 @@ const FirstPage = (props) => {
         </p>
       </div>
       <div id="form-question">
-        <Label q={questionData[0]} /> <br />
+        <Label q={questionData[0]} />
         <Question
           q={questionData[0]}
           name="first_text"
@@ -69,7 +71,7 @@ const FirstPage = (props) => {
           onTextChange={onTextChange}
         />
         <br />
-        <Label q={questionData[1]} /> <br />
+        <Label q={questionData[1]} />
         <Question
           q={questionData[1]}
           name="second_text"
@@ -79,15 +81,16 @@ const FirstPage = (props) => {
         <br />
       </div>
       <div id="form-color">
-        <label>배너에 종합적으로 사용하고 싶은 색깔은 무엇인가요?</label>
+        <label>3. 배너에 종합적으로 사용하고 싶은 색깔은 무엇인가요?</label>
         <Color onSelectColorChange={onSelectColorChange} />
         <br />
       </div>
       <div id="form-comment">
         <label>
-          배너에서 사용하고자 하는 문구와 해당 문구의 목적을 선택하세요.
+          4. 배너에서 사용하고자 하는 문구와 해당 문구의 목적을 선택하세요.
         </label>
-        <Comment onCommentChange={onCommentChange} />
+        <Comment onContentsChange={onContentsChange} />
+        <br />
       </div>
       <form>
         <div id="submit">
