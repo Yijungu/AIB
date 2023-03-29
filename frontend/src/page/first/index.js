@@ -8,12 +8,13 @@ import { Label } from "../../components/label";
 import { Comment } from "../../components/comment";
 import { Color } from "../../components/color";
 
-const FirstPage = () => {
+const FirstPage = (props) => {
   const navigate = useNavigate();
   const [text, setText] = useState({
     first_text: "",
     second_text: "",
   });
+  const [selectColor, setSelectColor] = useState("");
   const [comments, setComments] = useState([]);
 
   const { first_text, second_text } = text;
@@ -26,6 +27,11 @@ const FirstPage = () => {
     });
   };
 
+  const onSelectColorChange = (newColor) => {
+    setSelectColor(newColor);
+    console.log(selectColor);
+  };
+
   const onCommentChange = (newComments) => {
     setComments(newComments);
   };
@@ -33,9 +39,11 @@ const FirstPage = () => {
   const onClickSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://127.0.0.1:8000/review", {
+      .post("http://localhost:8000/review", {
         concept: text.first_text,
         include: text.second_text,
+        color: selectColor,
+        comments: comments,
       })
       .then((response) => {
         console.log(response);
@@ -43,7 +51,6 @@ const FirstPage = () => {
       .catch((error) => {
         console.log(error);
       });
-    // navigate("/second");
   };
 
   return (
@@ -73,7 +80,7 @@ const FirstPage = () => {
       </div>
       <div id="form-color">
         <label>배너에 종합적으로 사용하고 싶은 색깔은 무엇인가요?</label>
-        <Color />
+        <Color onSelectColorChange={onSelectColorChange} />
         <br />
       </div>
       <div id="form-comment">

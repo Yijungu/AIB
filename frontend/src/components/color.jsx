@@ -11,6 +11,7 @@ export const Color = (props) => {
   const { r, g, b, a } = sketchPickerColor;
 
   const onChangeColor = (color) => {
+    props.onSelectColorChange(color.hex);
     setSketchPickerColor(color.rgb);
   };
 
