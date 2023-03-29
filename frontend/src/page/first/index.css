@@ -2,8 +2,12 @@
     padding: 2rem;
     width: 100%;
     display: flex;
-    align-items: center;
     flex-direction: column;
+}
+
+#logo{
+    display: flex;
+    justify-content: center;
 }
 
 .question-class {
@@ -12,6 +16,11 @@
     outline-color: rgb(100, 100, 255);
     font-size: 12;
     font-family: "NotoSerifWeb", "Noto Serif CJK Kr", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+#form-question {
+    display: flex;
+    flex-direction: column;
 }
 
 .comment-outline {
