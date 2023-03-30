@@ -33,13 +33,19 @@ const FirstPage = (props) => {
     console.log(selectColor);
   };
 
-  const onContentsChange = (newContents) => {
-    setContents(newContents);
+  const onContentsChange = (newContents, newSelectOptions) => {
+    const newContent = [
+      ...contents,
+      { select: newSelectOptions, comment: newContents },
+    ];
+    console.log("newContents:", newContents);
+    console.log("newSelectOptions:", newSelectOptions);
+    setContents(newContent);
   };
 
   const onClickSubmit = (e) => {
     e.preventDefault();
-    console.log("contents: ", contents);
+    console.log("contents: ", contents[contents.length - 1]);
     axios
       .post("http://localhost:8000/review", {
         concept: text.first_text,
