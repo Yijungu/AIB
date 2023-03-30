@@ -14,6 +14,10 @@ export const Comment = (props) => {
   const addComment = () => {
     const newComments = [...comments, ""];
     setComments(newComments);
+
+    const newSelectedOptions = [...selectedOptions, ""];
+    setSelectedOptions(newSelectedOptions);
+
     props.onContentsChange(newComments, selectedOptions);
   };
 
@@ -21,9 +25,11 @@ export const Comment = (props) => {
     const newComments = [...comments];
     newComments.splice(index, 1);
     setComments(newComments);
+
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions.splice(index, 1);
     setSelectedOptions(newSelectedOptions);
+
     props.onContentsChange(newComments, newSelectedOptions);
   };
 
@@ -34,26 +40,15 @@ export const Comment = (props) => {
     props.onContentsChange(newComments, selectedOptions);
   };
 
-  const onSelectedOptionChange = (index, e) => {
-    const newSelectedOptions = [...selectedOptions];
-    newSelectedOptions[index] = e.target.value;
-    setSelectedOptions(newSelectedOptions);
-    props.onContentsChange(comments, newSelectedOptions);
-  };
-
   return (
     <div className="comment-class">
       {comments.map((comment, index) => (
         <div className="form-comment" key={index}>
-          <Select
-            value={selectedOptions[index] || ""}
-            onChange={(e) => onSelectedOptionChange(index, e)}
-          />
+          <Select index={index} selectedOptions={selectedOptions} />
           <TextareaAutosize
             id="comment-textareaauto"
             className="textareaauto"
             minRows={5}
-            cols={100}
             value={comment || ""}
             onChange={(e) => onTextChange(index, e)}
           />

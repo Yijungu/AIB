@@ -17,13 +17,16 @@ const IconSVG = styled.svg`
   height: 24px;
 `;
 
-export const Select = () => {
+export const Select = (props) => {
   const [selectedOption, setSelectedOption] = useState("");
 
   const onOptionChange = (e) => {
+    const newSelectedOptions = [...props.selectedOptions];
+    newSelectedOptions[props.index] = e.target.value;
+    console.log("indeX: ", props.index);
+    // props.setSelectedOptions(newSelectedOptions);
     setSelectedOption(e.target.value);
-    console.log(e.target);
-    console.log(selectedOption);
+    console.log(e.target.value);
   };
 
   return (
@@ -37,6 +40,9 @@ export const Select = () => {
       </option>
       <option key="test2" value="test2">
         test2
+      </option>
+      <option key="test3" value="test3">
+        test3
       </option>
       <IconSVG
         width="20"

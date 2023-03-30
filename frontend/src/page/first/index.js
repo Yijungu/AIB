@@ -15,8 +15,7 @@ const FirstPage = (props) => {
     second_text: "",
   });
   const [selectColor, setSelectColor] = useState("");
-  const [contents, setContents] = useState([]);
-  const [commentList, setCommentList] = useState({ select: "", comment: "" });
+  const [contents, setContents] = useState([{ select: "", comment: "" }]);
 
   const { first_text, second_text } = text;
 
@@ -38,14 +37,13 @@ const FirstPage = (props) => {
       ...contents,
       { select: newSelectOptions, comment: newContents },
     ];
-    console.log("newContents:", newContents);
-    console.log("newSelectOptions:", newSelectOptions);
     setContents(newContent);
+    console.log(contents);
   };
 
   const onClickSubmit = (e) => {
     e.preventDefault();
-    console.log("contents: ", contents[contents.length - 1]);
+    console.log(contents);
     axios
       .post("http://localhost:8000/review", {
         concept: text.first_text,
