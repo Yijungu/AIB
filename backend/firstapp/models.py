@@ -2,7 +2,7 @@ from django.db import models
 
 class Review(models.Model):
     concept = models.TextField()
-    image = models.TextField()
+    include = models.TextField()
     color = models.TextField()
 
     def __str__(self):

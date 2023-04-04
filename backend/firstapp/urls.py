@@ -10,7 +10,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('review/', ReviewList.as_view()),
     path('review/<int:pk>', ReviewDetail.as_view()),
-    path('my_view/', views.my_view),
     # path('api/', include('api.urls')),
 
     # 사용자가 아무것도 없는 경로로 들어온 경우

@@ -27,18 +27,6 @@ def index(request): # 특정한 경로가 없는 경우 http://127.0.0.1:8000/
         </html>
     ''')
 
-@csrf_exempt
-def my_view(request):
-    print(request)
-    if request.method == 'GET':
-        concept = request.GET.get('concept')
-        include = request.GET.get('include')
-        print(concept, include)
-        # 이후 작업 수행
-        return JsonResponse({'success': True})
-    else:
-        return JsonResponse({'success': False, 'message': 'Invalid request method'})
-
 class ReviewList(APIView):
     def get(self, request):
         reviews = Review.objects.all()
@@ -52,7 +40,7 @@ class ReviewList(APIView):
         if serializer.is_valid():
             # 데이터 받는 방법
             print(request.data['concept'])
-            print(request.data['image'])
+            print(request.data['include'])
             print(request.data['color'])
             '''
             # chatGPT 연결
