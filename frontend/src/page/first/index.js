@@ -11,12 +11,13 @@ import { Color } from "../../components/color";
 const FirstPage = () => {
   const navigate = useNavigate();
   const [text, setText] = useState({
-    first_text: "",
-    second_text: "",
+    concept: "",
+    image: "",
+    color: "",
   });
   const [comments, setComments] = useState([]);
 
-  const { first_text, second_text } = text;
+  const { concept, image, color } = text;
 
   const onTextChange = (e) => {
     const { name, value } = e.target;
@@ -34,8 +35,9 @@ const FirstPage = () => {
     e.preventDefault();
     axios 
       .post("http://localhost:8000/review/", {
-        title: text.first_text,
-        content: text.second_text,
+        concept: text.concept,
+        image: text.image,
+        color: text.color,
       })
       .then((response) => {
         console.log(response);
@@ -52,35 +54,40 @@ const FirstPage = () => {
           <b style={{ fontSize: 36, color: "rgb(100,100,255)" }}>A.I.B</b>anner
         </p>
       </div>
+
       <div id="form-question">
         <Label q={questionData[0]} /> <br />
         <Question
           q={questionData[0]}
-          name="first_text"
-          value={first_text}
+          name="concept"
+          value={concept}
           onTextChange={onTextChange}
         />
         <br />
         <Label q={questionData[1]} /> <br />
         <Question
           q={questionData[1]}
-          name="second_text"
-          value={second_text}
+          name="image"
+          value={image}
           onTextChange={onTextChange}
         />
         <br />
       </div>
+
       <div id="form-color">
         <label>배너에 종합적으로 사용하고 싶은 색깔은 무엇인가요?</label>
-        <Color />
+        <Color 
+        />
         <br />
       </div>
+
       <div id="form-comment">
         <label>
           배너에서 사용하고자 하는 문구와 해당 문구의 목적을 선택하세요.
         </label>
         <Comment onCommentChange={onCommentChange} />
       </div>
+
       <form>
         <div id="submit">
           <button id="submitButton" type="sumbit" onClick={onClickSubmit}>
@@ -88,6 +95,7 @@ const FirstPage = () => {
           </button>
         </div>
       </form>
+      
     </div>
   );
 };

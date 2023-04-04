@@ -8,6 +8,7 @@ RUN pip install Django
 RUN django-admin startproject trydjango
 RUN pip install django-cors-headers
 RUN pip install djangorestframework
+RUN pip install openai
 
 # 컨테이너 실행시 실행할 명령어
 
