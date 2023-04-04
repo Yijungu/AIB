@@ -32,10 +32,10 @@ const FirstPage = () => {
 
   const onClickSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("http://127.0.0.1:8000/review", {
-        concept: text.first_text,
-        include: text.second_text,
+    axios 
+      .post("http://localhost:8000/review/", {
+        title: text.first_text,
+        content: text.second_text,
       })
       .then((response) => {
         console.log(response);
@@ -43,7 +43,6 @@ const FirstPage = () => {
       .catch((error) => {
         console.log(error);
       });
-    // navigate("/second");
   };
 
   return (

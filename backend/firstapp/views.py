@@ -2,7 +2,9 @@ from django.shortcuts import render, HttpResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import Http404
+from django.http import Http404, JsonResponse
+
+from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import ReviewSerializer
 from .models import Review
@@ -19,10 +21,21 @@ def index(request): # 특정한 경로가 없는 경우 http://127.0.0.1:8000/
         </html>
     ''')
 
+@csrf_exempt
+def my_view(request):
+    print(request)
+    if request.method == 'GET':
+        concept = request.GET.get('concept')
+        include = request.GET.get('include')
+        print(concept, include)
+        # 이후 작업 수행
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
 class ReviewList(APIView):
     def get(self, request):
         reviews = Review.objects.all()
-
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
     
@@ -31,6 +44,8 @@ class ReviewList(APIView):
             data=request.data
         )
         if serializer.is_valid():
+            # 데이터 받는 방법
+            print(request.data['title'])
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -55,7 +70,7 @@ class ReviewDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, pk, format=None):
+    def delete(self, request, pk, format=None):
         review = self.get_object(pk)
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
