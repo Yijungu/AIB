@@ -40,7 +40,7 @@ export const Comment = (props) => {
     const newSelects = [...selectedOptions];
     newSelects[index] = e.target.value;
     setSelectedOptions(newSelects);
-    props.onContentsChange(props.comment, newSelects);
+    props.onContentsChange(comments, newSelects);
   };
 
   return (

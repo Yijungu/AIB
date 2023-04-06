@@ -48,6 +48,20 @@ const FirstPage = (props) => {
     console.log("include:", text.second_text);
     console.log("color:", selectColor);
     console.log("contents:", contents);
+    console.log("length:", contents[contents.length - 1]);
+
+    const c = [];
+    const i_len = contents[contents.length - 1].comment.length;
+    for (let i = 0; i < i_len; i++) {
+      c.push({
+        id: i,
+        select: contents[contents.length - 1].select[i],
+        comment: contents[contents.length - 1].comment[i],
+      });
+    }
+
+    console.log("c:", c);
+
     axios
       .post("http://localhost:8000/review", {
         concept: text.first_text,
