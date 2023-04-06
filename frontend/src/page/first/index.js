@@ -44,11 +44,6 @@ const FirstPage = (props) => {
 
   const onClickSubmit = (e) => {
     e.preventDefault();
-    console.log("concept:", text.first_text);
-    console.log("include:", text.second_text);
-    console.log("color:", selectColor);
-    console.log("contents:", contents);
-    console.log("length:", contents[contents.length - 1]);
 
     const c = [];
     const i_len = contents[contents.length - 1].comment.length;
@@ -60,14 +55,12 @@ const FirstPage = (props) => {
       });
     }
 
-    console.log("c:", c);
-
     axios
       .post("http://localhost:8000/review", {
         concept: text.first_text,
         include: text.second_text,
         color: selectColor,
-        contents: contents,
+        contents: c,
       })
       .then((response) => {
         console.log(response);
