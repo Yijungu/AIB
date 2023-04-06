@@ -32,18 +32,22 @@ const FirstPage = (props) => {
     console.log(selectColor);
   };
 
-  const onContentsChange = (newContents, newSelectOptions) => {
-    const newContent = [
+  const onContentsChange = (newComments, newSelects) => {
+    console.log("index| select:", newSelects);
+    const newContents = [
       ...contents,
-      { select: newSelectOptions, comment: newContents },
+      { select: newSelects, comment: newComments },
     ];
-    setContents(newContent);
+    setContents(newContents);
     console.log(contents);
   };
 
   const onClickSubmit = (e) => {
     e.preventDefault();
-    console.log(contents);
+    console.log("concept:", text.first_text);
+    console.log("include:", text.second_text);
+    console.log("color:", selectColor);
+    console.log("contents:", contents);
     axios
       .post("http://localhost:8000/review", {
         concept: text.first_text,
@@ -57,6 +61,7 @@ const FirstPage = (props) => {
       .catch((error) => {
         console.log(error);
       });
+    console.log(contents);
   };
 
   return (
