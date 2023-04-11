@@ -4,6 +4,7 @@ class Review(models.Model):
     concept = models.TextField()
     include = models.TextField()
     color = models.TextField()
+    contents = models.TextField()
 
     def __str__(self):
         """A string representation of the model."""

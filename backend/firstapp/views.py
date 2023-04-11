@@ -42,6 +42,7 @@ class ReviewList(APIView):
             print(request.data['concept'])
             print(request.data['include'])
             print(request.data['color'])
+            print(request.data['contents'])
             '''
             # chatGPT 연결
             response = openai.Completion.create(
