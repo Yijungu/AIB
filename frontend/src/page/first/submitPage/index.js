@@ -56,11 +56,11 @@ const SubmitPage = (props) => {
     }
 
     axios
-      .post("http://localhost:8000/review", {
+      .post("http://localhost:8000/review/", {
         concept: text.first_text,
         include: text.second_text,
         color: selectColor,
-        contents: c,
+        // contents: c,
       })
       .then((response) => {
         console.log(response);
