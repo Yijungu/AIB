@@ -11,11 +11,14 @@ export const Color = (props) => {
   const { r, g, b, a } = sketchPickerColor;
 
   const onChangeColor = (color) => {
+    props.onSelectColorChange(color.hex);
     setSketchPickerColor(color.rgb);
   };
 
   return (
-    <div id="style.color">
+    <div id="color-select">
+      <SketchPicker onChange={onChangeColor} color={sketchPickerColor} />
+      <p>선택한 색깔</p>
       <div
         style={{
           backgroundColor: `rgba(${r},${g},${b},${a})`,
@@ -24,7 +27,6 @@ export const Color = (props) => {
           border: "2px solid white",
         }}
       ></div>
-      <SketchPicker onChange={onChangeColor} color={sketchPickerColor} />
     </div>
   );
 };

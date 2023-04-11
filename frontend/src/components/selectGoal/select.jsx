@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 const SelectStyle = styled.select`
@@ -17,25 +16,24 @@ const IconSVG = styled.svg`
   height: 24px;
 `;
 
-export const Select = () => {
-  const [selectedOption, setSelectedOption] = useState("");
-
-  const onOptionChange = (e) => {
-    setSelectedOption(e.target.value);
-    console.log(selectedOption);
-  };
-
+export const Select = (props) => {
   return (
     <SelectStyle
       id="form-select"
-      value={selectedOption}
-      onChange={onOptionChange}
+      value={props.selectOption}
+      onChange={props.onChange}
     >
+      <option key="nullKey" value="null">
+        - 선택 -
+      </option>
       <option key="test1" value="test1">
         test1
       </option>
       <option key="test2" value="test2">
         test2
+      </option>
+      <option key="test3" value="test3">
+        test3
       </option>
       <IconSVG
         width="20"

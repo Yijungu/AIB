@@ -6,6 +6,8 @@ from .views import ReviewList, ReviewDetail
 from . import views
 
 urlpatterns = [
+    path('', views.index), 
+    path('admin/', admin.site.urls),
     path('review/', ReviewList.as_view()),
     path('review/<int:pk>', ReviewDetail.as_view()),
     # path('api/', include('api.urls')),
