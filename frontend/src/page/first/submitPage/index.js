@@ -30,7 +30,6 @@ const SubmitPage = (props) => {
 
   const onSelectColorChange = (newColor) => {
     setSelectColor(newColor);
-    console.log(selectColor);
   };
 
   const onContentsChange = (newComments, newSelects) => {
@@ -60,7 +59,7 @@ const SubmitPage = (props) => {
         concept: text.first_text,
         include: text.second_text,
         color: selectColor,
-        // contents: c,
+        contents: c,
       })
       .then((response) => {
         console.log(response);
