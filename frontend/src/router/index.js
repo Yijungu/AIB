@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ExamplePage from "../page/first/examplePage";
-import SubmitPage from "../page/first/submitPage";
-import LastPage from "../page/last";
-import SecondPage from "../page/second";
+import ExamplePage from "../page/main/examplePage";
+import SubmitPage from "../page/main/submitPage";
+import LastPage from "../page/finalImg";
+import SecondPage from "../page/selectImg";
 
 const Router = () => {
   return (
