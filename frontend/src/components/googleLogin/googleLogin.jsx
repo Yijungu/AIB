@@ -1,26 +1,26 @@
-import { GoogleLogin } from "@react-oauth/google";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import React from "react";
+import GoogleLogin from "@leecheuk/react-google-login";
+import { useNavigate } from "react-router-dom";
 
 export const GoogleLoginButton = () => {
-  const onSuccess = (response) => {
-    console.log("로그인 성공", response);
-    // 로그인 성공 시 처리할 로직 추가
+  const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const navigate = useNavigate();
+  const handleSuccess = (response) => {
+    navigate("/submit");
+    console.log("로그인 성공:", response);
   };
 
-  const onFailure = (error) => {
-    console.log("로그인 실패", error);
-    // 로그인 실패 시 처리할 로직 추가
+  const handleFailure = (error) => {
+    console.log("로그인 실패:", error);
   };
 
   return (
-    <GoogleOAuthProvider>
+    <div>
       <GoogleLogin
-        clientId="1039952665351-8r47blls12qq2mpu0emfkoa0rmllt25a.apps.googleusercontent.com"
-        buttonText="Google로 로그인"
-        onSuccess={onSuccess}
-        onFailure={onFailure}
-        cookiePolicy={"single_host_origin"}
+        onSuccess={handleSuccess}
+        onFailure={handleFailure}
+        clientId={CLIENT_ID}
       />
-    </GoogleOAuthProvider>
+    </div>
   );
 };
