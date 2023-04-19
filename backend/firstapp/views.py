@@ -10,11 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import ReviewSerializer
 from .models import Review
+from .api import makeGPT
 # Create your views here.
-
-# chatGPT API 정보
-openai.api_key = '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'
-model = 'text-davinci-003'
 
 # client로 정보를 전송하는 역할, index는 그냥 이름 바꿔도 상관x
 # parameter의 인자로 요청과 관련된 여러 정보를 들어오도록 약속된 객체를 전송
@@ -38,21 +35,9 @@ class ReviewList(APIView):
             data=request.data
         )
         if serializer.is_valid():
-            # 데이터 받는 방법
-            print(request.data['concept'])
-            print(request.data['include'])
-            print(request.data['color'])
-            '''
-            # chatGPT 연결
-            response = openai.Completion.create(
-                prompt = request.data['concept'],
-                model = model,
-                max_tokens = 1000,
-                temperature = 0.9,
-            )
-            for result in response.choices:
-                print(result.text)
-            '''
+            answer = makeGPT(request)
+            print(answer)
+ 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

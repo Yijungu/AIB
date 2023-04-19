@@ -4,6 +4,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import ReviewList, ReviewDetail
 
 from . import views
+from . import api
 
 urlpatterns = [
     path('', views.index), 
