@@ -54,7 +54,9 @@ RUN pip install diffusers transformers accelerate scipy safetensors
 
 # 컨테이너 실행시 실행할 명령어
 
+
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+
 
 
 # 이미지 생성 명령어 (현 파일과 같은 디렉토리에서) gg
