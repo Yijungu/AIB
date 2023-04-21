@@ -1,19 +1,36 @@
+import openai
+
 from django.shortcuts import render, HttpResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import Http404
+from django.http import Http404, JsonResponse
+
+from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import ReviewSerializer
 from .models import Review
+from .api import makeGPT, makeStableDiffusion
 # Create your views here.
+
+# chatGPT API 정보
+openai.api_key = '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'
+model = 'text-davinci-003'
 
 # client로 정보를 전송하는 역할, index는 그냥 이름 바꿔도 상관x
 # parameter의 인자로 요청과 관련된 여러 정보를 들어오도록 약속된 객체를 전송
+def index(request): # 특정한 경로가 없는 경우 http://127.0.0.1:8000/
+    # 처리한 결과를 client로 보내줄 때 return을 사용
+    # Http를 이용해서 응답하기 위해 HttpResponse객체를 사용
+    return HttpResponse('''
+        <html>
+            Hello, Django
+        </html>
+    ''')
+
 class ReviewList(APIView):
     def get(self, request):
         reviews = Review.objects.all()
-
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
     
@@ -22,7 +39,10 @@ class ReviewList(APIView):
             data=request.data
         )
         if serializer.is_valid():
-            serializer.save()
+            answer = makeGPT(request)
+            print("GPT에서 나온 대답은 : " + answer)
+            makeStableDiffusion(answer)
+ 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -46,7 +66,7 @@ class ReviewDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, pk, format=None):
+    def delete(self, request, pk, format=None):
         review = self.get_object(pk)
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

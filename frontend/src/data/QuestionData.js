@@ -1,17 +1,12 @@
 export const questionData = [
   {
     id: "first-questionData-id",
-    question: "First question",
-    ph: "ex) first place",
+    question: "1. 구체적인 배너의 주제(컨셉)은 무엇인가요?",
+    ph: "ex) 여름 휴가를 위한 여름 여행 상품 홍보",
   },
   {
     id: "second-questionData-id",
-    question: "Second question",
-    ph: "ex) second place",
-  },
-  {
-    id: "third-questionData-id",
-    question: "Third question",
-    ph: "ex) third place",
+    question: "2. 배너에 포함되었으면 하는 이미지는 어떤 것이 있나요?",
+    ph: "ex) 여름 분위기의 아이콘, 모래, 바다, 해양 스포츠",
   },
 ];

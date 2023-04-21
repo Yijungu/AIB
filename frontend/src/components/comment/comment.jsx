@@ -3,7 +3,7 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { Select } from "./select";
+import { Select } from "../selectGoal/select";
 
 export const Comment = (props) => {
   const [comments, setComments] = useState(props.comments || [""]);
@@ -14,31 +14,33 @@ export const Comment = (props) => {
   const addComment = () => {
     const newComments = [...comments, ""];
     setComments(newComments);
-    props.onCommentChange(newComments, selectedOptions);
+
+    const newSelectedOptions = [...selectedOptions, ""];
+    setSelectedOptions(newSelectedOptions);
   };
 
   const deleteComment = (index) => {
     const newComments = [...comments];
     newComments.splice(index, 1);
     setComments(newComments);
+
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions.splice(index, 1);
     setSelectedOptions(newSelectedOptions);
-    props.onCommentChange(newComments, newSelectedOptions);
   };
 
   const onTextChange = (index, e) => {
     const newComments = [...comments];
     newComments[index] = e.target.value;
     setComments(newComments);
-    props.onCommentChange(newComments, selectedOptions);
+    props.onContentsChange(newComments, selectedOptions);
   };
 
-  const onSelectedOptionChange = (index, e) => {
-    const newSelectedOptions = [...selectedOptions];
-    newSelectedOptions[index] = e.target.value;
-    setSelectedOptions(newSelectedOptions);
-    props.onCommentChange(comments, newSelectedOptions);
+  const onOptionChange = (index, e) => {
+    const newSelects = [...selectedOptions];
+    newSelects[index] = e.target.value;
+    setSelectedOptions(newSelects);
+    props.onContentsChange(comments, newSelects);
   };
 
   return (
@@ -46,14 +48,16 @@ export const Comment = (props) => {
       {comments.map((comment, index) => (
         <div className="form-comment" key={index}>
           <Select
-            value={selectedOptions[index] || ""}
-            onChange={(e) => onSelectedOptionChange(index, e)}
+            index={index}
+            comment={comment[index]}
+            selectedOption={selectedOptions[index]}
+            onChange={(e) => onOptionChange(index, e)}
+            onContentsChange={props.onContentsChange}
           />
           <TextareaAutosize
-            id=""
-            className="comment-outline"
+            id="comment-textareaauto"
+            className="textareaauto"
             minRows={5}
-            cols={100}
             value={comment || ""}
             onChange={(e) => onTextChange(index, e)}
           />

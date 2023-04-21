@@ -1,12 +1,15 @@
 #container-First {
-    padding: 2rem;
-    width: 100%;
+    padding: 5rem;
     display: flex;
-    align-items: center;
     flex-direction: column;
 }
 
-.question-class {
+#logo{
+    display: flex;
+    justify-content: center;
+}
+
+.textareaauto {
     margin-bottom: 3ch;
     border: 2px solid rgb(0, 11, 255);
     outline-color: rgb(100, 100, 255);
@@ -14,11 +17,19 @@
     font-family: "NotoSerifWeb", "Noto Serif CJK Kr", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
-.comment-outline {
-    border: 2px solid rgb(0, 11, 255);
-    outline-color: rgb(100, 100, 255);
-    font-size: 12;
-    font-family: "NotoSerifWeb", "Noto Serif CJK Kr", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+#comment-textareaauto {
+    margin-bottom: 0;
+}
+
+#form-question {
+    display: flex;
+    flex-direction: column;
+}
+
+#color-select {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .form-comment {
@@ -28,6 +39,11 @@
 
 .delete-button {
     margin-bottom: 3ch;
+}
+
+#submit {
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 #submitButton {
