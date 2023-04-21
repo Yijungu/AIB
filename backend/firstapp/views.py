@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import ReviewSerializer
 from .models import Review
-from .api import makeGPT
+from .api import makeGPT, makeStableDiffusion
 # Create your views here.
 
 # client로 정보를 전송하는 역할, index는 그냥 이름 바꿔도 상관x
@@ -36,7 +36,8 @@ class ReviewList(APIView):
         )
         if serializer.is_valid():
             answer = makeGPT(request)
-            print(answer)
+            print("GPT에서 나온 대답은 : " + answer)
+            makeStableDiffusion(answer)
  
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
