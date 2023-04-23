@@ -2,13 +2,22 @@ FROM python:3.10.6
 
 # 이미지 내에서 명령어를 실행할(현 위치로 잡을) 디렉토리 설정
 WORKDIR /usr/src/app
+COPY . /usr/src/app
 
+RUN pip install --upgrade pip
 RUN pip install Django
 RUN django-admin startproject trydjango
 RUN pip install django-cors-headers
 RUN pip install djangorestframework
 RUN pip install openai
 RUN pip install diffusers transformers accelerate scipy safetensors
+RUN pip install segment_anything
+RUN pip install matplotlib
+RUN pip install opencv-python
+RUN pip install torchvision
+
+RUN apt-get update
+RUN apt-get -y install libgl1-mesa-glx
 
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_VISIBLE_DEVICES=all
