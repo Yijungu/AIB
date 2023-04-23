@@ -17,6 +17,14 @@ services:
     # 환경변수 설정
     environment: 
       - DBHOST=database
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    
   frontend:
     build: ./frontend
     # 연결할 외부 디렉토리 : 컨테이너 내 디렉토리
