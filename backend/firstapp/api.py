@@ -14,6 +14,8 @@ from .views import *
 from .serializers import TemplateSerializer
 #from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
+from django.http import HttpRequest
+
 #openai.api_key = 
 model = 'text-davinci-003'
 model_id = "runwayml/stable-diffusion-v1-5"
@@ -277,3 +279,8 @@ def template(width, height, position, fontsize) :
 
     return position, fontsize
     
+def requestdb() :
+    request = HttpRequest()
+    request.method = 'GET'  # or 'POST', 'PUT', etc., depending on the view function
+    response = example_view(request)
+    print(response.content.decode('utf-8'))
