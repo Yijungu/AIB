@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example Page</title>
+</head>
+<body>
+    <h1>All TextBoxes</h1>
+    <ul>
+        {% for textbox in all_textboxes %}
+            <li>{{ textbox.purpose }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>All Templates</h1>
+    <ul>
+        {% for template in all_templates %}
+            <li>{{ template.template_size }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
