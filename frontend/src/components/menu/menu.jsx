@@ -7,7 +7,7 @@ export const Menu = () => {
     <nav>
       <ul>
         <li>
-          <Link to="/example">Example</Link>
+          <Link to="/example">EXAMPLE</Link>
         </li>
         <li>
           <Link to="/submit">Submit</Link>

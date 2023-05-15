@@ -30,7 +30,6 @@ const SubmitPage = (props) => {
 
   const onSelectColorChange = (newColor) => {
     setSelectColor(newColor);
-    console.log(selectColor);
   };
 
   const onContentsChange = (newComments, newSelects) => {
@@ -60,7 +59,7 @@ const SubmitPage = (props) => {
         concept: text.first_text,
         include: text.second_text,
         color: selectColor,
-        // contents: c,
+        contents: c,
       })
       .then((response) => {
         console.log(response);
@@ -73,13 +72,13 @@ const SubmitPage = (props) => {
   return (
     <>
       <Menu />
+      <div id="logo">
+        <p style={{ fontSize: 20 }}>
+          <b style={{ fontSize: 36, color: "rgb(100,100,255)" }}>A.I.B</b>
+          anner
+        </p>
+      </div>
       <div id="container-First">
-        <div id="logo">
-          <p style={{ fontSize: 20 }}>
-            <b style={{ fontSize: 36, color: "rgb(100,100,255)" }}>A.I.B</b>
-            anner
-          </p>
-        </div>
         <div id="form-question">
           <Label q={questionData[0]} />
           <Question

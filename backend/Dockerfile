@@ -10,11 +10,14 @@ RUN django-admin startproject trydjango
 RUN pip install django-cors-headers
 RUN pip install djangorestframework
 RUN pip install openai
-RUN pip install diffusers transformers accelerate scipy safetensors
-RUN pip install segment_anything
-RUN pip install matplotlib
+#RUN pip install diffusers transformers accelerate scipy safetensors
 RUN pip install opencv-python
-RUN pip install torchvision
+#RUN pip install torchvision
+RUN pip install pillow
+#RUN pip install tensorflow
+RUN pip install tensorflow-hub
+RUN pip install scipy
+RUN pip install mysqlclient
 
 RUN apt-get update
 RUN apt-get -y install libgl1-mesa-glx
