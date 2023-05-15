@@ -1,23 +1,19 @@
-CREATE TABLE Design (
-design_id int not null auto_increment,
-text_number int not null,
-height int not null,
-width int not null,
-primary key(design_id)
+CREATE TABLE Template (
+template_id int not null auto_increment,
+textbox_number int not null,
+template_size set("1000:200", "600:400", "400:600", "200:1000") not null, 
+primary key(template_id)
 );
 
-CREATE TABLE Text (
-design_id int not null,
-letter_nuber int not null,
-usage varchar(5) not null,
-left_location float not null,
-up_location float not null,
-width float not null,
-letter_color set('black', 'white', 'light', 'thick', 'complementary') not null, 
-letter_size int not null,
-highlight_size int, 
-highlight_color set('black', 'white', 'light', 'thick', 'complementary'),
-highlight_font varchar(8),  
-foreign key (design_id) references Design(design_id) on update CASCADE
+CREATE TABLE TextBox (
+template_id int not null,
+textbox_x int not null,
+textbox_y int not null,
+width_sort set("left", "right") not null,
+height_sort set("up", "down") not null,
+font_size int not null,
+line_break int not null,
+purpose set("큰 홍보문구", "작은 홍보문구", "상세 설명", "시간&장소")
+foreign key (template_id) references Template(template_id) on update CASCADE
 );
 

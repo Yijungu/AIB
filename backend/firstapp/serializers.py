@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from .models import Review
+from .models import Template, TextBox
 
-class ReviewSerializer(serializers.ModelSerializer):
+class TemplateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Review
-        fields = ('id', 'concept', 'include', 'color', 'contents')
+        model = Template
+        fields = 'all'
+
+class TextBoxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TextBox
+        fields = 'all'

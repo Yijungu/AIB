@@ -1,15 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import ReviewList, ReviewDetail
+from .views import TextboxList
 
 from . import views
+from . import api
 
 urlpatterns = [
-    path('', views.index), 
     path('admin/', admin.site.urls),
-    path('review/', ReviewList.as_view()),
-    path('review/<int:pk>', ReviewDetail.as_view()),
+    path('example/', views.example_view, name='example_view'),
     # path('api/', include('api.urls')),
 
     # 사용자가 아무것도 없는 경로로 들어온 경우
