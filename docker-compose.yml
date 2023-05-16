@@ -27,6 +27,13 @@ services:
       - DBHOST=database
     depends_on:
       - database
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
     
   frontend:
     build: ./frontend
