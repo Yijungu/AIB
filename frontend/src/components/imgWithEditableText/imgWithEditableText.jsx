@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import "./imgWithEditableText.css";
 
 const fontOptions = [
   { value: "Arial", label: "Arial" },
@@ -55,45 +56,21 @@ export const ImageWithEditableText = ({
     };
   }, []);
 
-  const containerStyle = {
-    position: "relative",
-    display: "inline-block",
-  };
-
-  const imageStyle = {
-    maxWidth: "100%",
-    height: "auto",
-  };
-
   const textStyle = {
-    position: "absolute",
     top: `${textPosition.y}px`,
     left: `${textPosition.x}px`,
-    color: "white",
     fontSize: `${fontSize}px`,
     fontFamily: `${fontFamily}`,
-    fontWeight: "bold",
-    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
-    cursor: "pointer",
-    transition: "all 0.3s",
   };
 
   const systemStyle = {
-    position: "absolute",
-    top: `${textPosition.y - 50}px`, // 시스템의 세로 위치 조정
+    top: `${textPosition.y - 60}px`, // 시스템의 세로 위치 조정
     left: `${textPosition.x}px`, // 시스템의 가로 위치 조정
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    color: "white",
-    padding: "7px",
-    background: "rgba(0, 0, 0, 0.8)",
-    borderRadius: "4px",
   };
 
   return (
-    <div className="image-with-text" style={containerStyle} ref={containerRef}>
-      <img src={imageUrl} alt="Image" style={imageStyle} />
+    <div className="image-with-text" ref={containerRef}>
+      <img src={imageUrl} alt="Image" />
       <div className="text-wrapper" style={textStyle} onClick={handleTextClick}>
         {text}
       </div>
