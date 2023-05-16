@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
-from .api import makeGPT, makeStableDiffusion, textOnImage, get_templates_and_textboxes
+from .api import makeWebBanner
 import os
 # Create your views here.
 
@@ -31,12 +31,14 @@ def example_view(request):
 
 def test_view(request):
     if request.method == "POST":
+        product = request.POST.get('product')
         size = request.POST.get('size')
         purposes = request.POST.get('purposes').split(',')
         texts = request.POST.get('texts').split(',')
+        
+        print(product)
 
-        # Call the function to generate images
-        textOnImage(texts, size, purposes)
+        makeWebBanner(product, texts, size, purposes)
 
         # Get the list of generated image files
         image_files = [f for f in os.listdir() if f.startswith('WebBanner_')]
@@ -45,19 +47,19 @@ def test_view(request):
 
     return render(request, 'test.html')
 
-class TextboxList(APIView):
+# class TextboxList(APIView):
 
-    def post(self, request):
-        serializer = TemplateSerializer(
-            data=request.data
-        )
-        if serializer.is_valid():
-            """answer = makeGPT(request)
-            print("GPT에서 나온 대답은 : " + answer)"""
-            makeStableDiffusion("Shopping discount, painting, advertisement")
+#     def post(self, request):
+#         serializer = TemplateSerializer(
+#             data=request.data
+#         )
+#         if serializer.is_valid():
+#             """answer = makeGPT(request)
+#             print("GPT에서 나온 대답은 : " + answer)"""
+#             makeStableDiffusion("Shopping discount, painting, advertisement")
  
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 
