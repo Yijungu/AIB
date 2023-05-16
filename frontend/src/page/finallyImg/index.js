@@ -1,15 +1,26 @@
 import React from "react";
-import { ImageWithEditableText } from "../../components/imgWithEditableText/imgWithEditableText";
+import { ImgWithEditableText } from "../../components/imgWithEditableText/imgWithEditableText";
 
 const LastPage = () => {
   const image = {
     imageUrl: "/testImgJpeg.jpeg",
-    initialText: "AIB Good Service",
-    textPosition: { x: 500, y: 200 },
+    initialTexts: [
+      { text: "AIB Good Service", fontSize: 24, fontFamily: "Arial" },
+      { text: "AIB Project Finish!!!", fontSize: 18, fontFamily: "Arial" },
+    ],
+    textPositions: [
+      { x: 500, y: 200 },
+      { x: 1000, y: 300 },
+    ],
   };
+
   return (
     <>
-      <ImageWithEditableText {...image} />
+      <ImgWithEditableText
+        imageUrl={image.imageUrl}
+        initialTexts={image.initialTexts}
+        textPositions={image.textPositions}
+      />
     </>
   );
 };
