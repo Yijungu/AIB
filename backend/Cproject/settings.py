@@ -95,9 +95,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mydatabase',
-        'USER': 'mysql_user',
-        'PASSWORD': 'mysql_password',
-        'HOST': 'localhost',
+        'USER': 'mydatabaseuser',
+        'PASSWORD': 'mypassword',  # 'myrootpassword'에서 'mypassword'로 변경
+        'HOST': 'database',
         'PORT': '3306',
     }
 }

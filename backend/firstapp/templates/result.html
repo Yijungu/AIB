@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Generated Web Banners</h2>
+
+{% for image_file in image_files %}
+    <img src="{{ image_file }}" alt="WebBanner">
+    <p>{{ image_file }}</p>
+{% endfor %}
+
+</body>
+</html>

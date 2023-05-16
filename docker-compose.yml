@@ -1,11 +1,19 @@
 version: '3'
 services:
   database:
+    image: mysql:8.0
+
+    environment:
+      MYSQL_ROOT_PASSWORD: myrootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: mydatabaseuser
+      MYSQL_PASSWORD: mypassword
     # Dockerfile이 있는 위치
     build: ./database
     # 내부에서 개방할 포트 : 외부에서 접근할 포트
     ports:
-      - "8080:8080"
+      - "3306:3306"
+
   backend:
     tty: true
     build: ./backend
@@ -17,13 +25,8 @@ services:
     # 환경변수 설정
     environment: 
       - DBHOST=database
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+    depends_on:
+      - database
     
   frontend:
     build: ./frontend

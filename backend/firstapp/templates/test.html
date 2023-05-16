@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Enter the size, purposes, and texts to generate web banners</h2>
+
+<form action="{% url 'test' %}" method="post">
+{% csrf_token %}
+  <label for="size">Size (width:height):</label><br>
+  <input type="text" id="size" name="size"><br>
+  <label for="purposes">Purposes (comma-separated):</label><br>
+  <input type="text" id="purposes" name="purposes"><br>
+  <label for="texts">Texts (comma-separated):</label><br>
+  <input type="text" id="texts" name="texts"><br>
+  <input type="submit" value="Submit">
+</form> 
+
+</body>
+</html>
