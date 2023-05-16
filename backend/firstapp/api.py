@@ -1,43 +1,53 @@
 import os
 import openai
-#import torch, gc
+import torch, gc
 import numpy as np
 import cv2
 import math
 
-#import tensorflow as tf
-#import tensorflow_hub as hub
+import tensorflow as tf
+import tensorflow_hub as hub
 
 from scipy.stats import norm
 from PIL import Image, ImageDraw, ImageFont
 from .views import *
 from .serializers import TemplateSerializer
-#from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
 from django.http import HttpRequest
 from collections import Counter
 from django.db.models import Prefetch
 
 #openai.api_key = 
-model = 'text-davinci-003'
+gptModel = 'text-davinci-003'
 model_id = "runwayml/stable-diffusion-v1-5"
 
 MODEL_URL = "https://tfhub.dev/tensorflow/efficientdet/d2/1"
-#model = hub.load(MODEL_URL)
+detectModel = hub.load(MODEL_URL)
+
+def makeWebBanner(product, texts, size, purposes):
+    width, height = map(int, size.split(':'))
+    webBannerImage = makeStableDiffusion(product, width, height)
+    axis = 'x' if width > height else 'y'
+    direction = detect(webBannerImage, axis)
+    webBannerImage = transparency2(webBannerImage, direction)
+    webBannerImage = add_white_background(webBannerImage)
+    textOnImage(webBannerImage, texts, size, purposes)
+
 
 def makeGPT(request) :
     print(request.data['concept'])
     # chatGPT 연결
     response = openai.Completion.create(
         prompt = request.data['concept'],
-        model = model
+        model = gptModel
     )
     for result in response.choices:
         return(result.text)
 
 
-def makeStableDiffusion(answer) :
-    """print("쿠다 가능 :{}".format(torch.cuda.is_available()))
+def makeStableDiffusion(answer, width, height) :
+    print("쿠다 가능 :{}".format(torch.cuda.is_available()))
     
     # Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead
     pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
@@ -51,68 +61,16 @@ def makeStableDiffusion(answer) :
 
     prompt = answer
 
-    image = pipe(prompt, height=360, width=1200, 
+    image = pipe(prompt, height=height, width=width, 
                 negative_prompt="text box, "+"people, "+"person, "+"face", guidance_scale=4).images[0]
     
-    image.save("StableDiffusion.png")"""
-    
-    """direction = detect()
-
-    transparency(direction)"""
-
-    """transparency2()
-    add_white_background()
-    textOnImage()"""
-
-    position = [(568, 41), (568, 98), (568, 140)] 
-    font_size = [24, 12, 7]
-    print(template(1200, 360, position, font_size))
+    return image
 
 
 
-def transparency(direction) :
-    # 이미지 파일 열기
-    image = Image.open('StableDiffusion.png')
-
-    # 이미지를 RGBA 모드로 변환 (알파 채널이 없는 경우에도 작동하도록 함)
-    image = image.convert('RGBA')
-
-    # 픽셀 단위로 투명도 변경
-    width, height = image.size
-    new_image_data = []
-    factor = 2
-    min_alpha = 50
-    for y in range(height):
-        for x in range(width):
-            item = image.getpixel((x, y))
-            match direction :
-                case "up" :
-                  alpha = int(min_alpha + (255 - min_alpha) * (1 - (y / height) ** factor))               # 아래로 갈수록 투명도 증가
-                case "down" :
-                  alpha = int(min_alpha + (255 - min_alpha) * (1 - ((height - y) / height) ** factor))    # 위로 갈수록 투명도 증가
-                case "left" :
-                  alpha = int(min_alpha + (255 - min_alpha) * (1 - (x / width) ** factor))                # 오른쪽으로 갈수록 투명도 증가
-                case "right" :
-                  alpha = int(min_alpha + (255 - min_alpha) * (1 - ((width - x) / width) ** factor))      # 왼쪽으로 갈수록 투명도 증가
-            
-            new_image_data.append((item[0], item[1], item[2], alpha))
-
-    # 새로운 이미지 생성
-    new_image = Image.new('RGBA', image.size)
-    new_image.putdata(new_image_data)
-
-    # 결과 이미지 저장 및 출력
-    new_image.save('transparency.png')
-
-def add_white_background():
-    """
-    RGBA 이미지에 흰색 배경을 추가합니다.
-
-    :param image: PIL.Image 객체
-    :return: 흰색 배경이 추가된 PIL.Image 객체
-    """
+def add_white_background(before_img):
     # 이미지 사이즈를 가져옵니다.
-    image = Image.open('gradient_transparency_image_left_to_right_and_back.png')
+    image = before_img
 
     width, height = image.size
 
@@ -122,11 +80,11 @@ def add_white_background():
     # 원본 이미지를 흰색 배경 이미지 위에 붙여넣기 (알파 채널 값에 따라 투명도를 적용)
     white_background.alpha_composite(image)
 
-    white_background.save('white_background.png')
+    return white_background
 
 import numpy as np
 
-def textOnImage(texts, size, required_purposes, image_file='white_background.png'):
+def textOnImage(before_img, texts, size, required_purposes):
     # Parsing width and height from size
     width, height = map(int, size.split(':'))
 
@@ -153,7 +111,7 @@ def textOnImage(texts, size, required_purposes, image_file='white_background.png
             font_sizes.append(font_size)
             alignments.append(textbox.width_sort)
 
-        image = Image.open(image_file)
+        image = before_img
         draw  = ImageDraw.Draw(image)
 
         # Font settings
@@ -192,30 +150,30 @@ def textOnImage(texts, size, required_purposes, image_file='white_background.png
 
 
 
-def detect() :
-   
-    image_path = 'hamburger.png'
-    image = cv2.imread(image_path)
-    boxes, scores, classes = detect_objects(image_path)
-    weighted_center = weighted_center_of_mass(boxes, scores, image.shape)
+def detect(image_data, axis):
+    image_np = np.fromstring(image_data, np.uint8)
+    image = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+
+    boxes, scores, classes = detect_objects(image)
+    weighted_center = weighted_center_of_mass(boxes, scores, image.shape, axis)
 
     if weighted_center is not None:
         if weighted_center < 0.5:
-            return "left"
+            return 'left' if axis == 'x' else 'up'
         else:
-            return "right"
+            return "right" if axis == 'x' else 'down'
     else:
         return "left"
 
-def detect_objects(image_path):
-    image = cv2.imread(image_path)
+
+def detect_objects(image):
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image_np = np.expand_dims(image_rgb, axis=0)
 
     # 객체 감지 모델 로드
 
     # 객체 감지 실행
-    result = model(image_np)
+    result = detectModel(image_np)
 
     # 결과를 NumPy 배열로 변환
     boxes = result["detection_boxes"].numpy()
@@ -244,7 +202,6 @@ def weighted_center_of_mass(boxes, scores, image_size, axis='x', min_score_thres
             box_width = x2 - x1
             box_height = y2 - y1
             box_area = box_width * box_height * image_size[0] * image_size[1]
-            print(box_area)
             weighted_center += center * box_area
             total_weight += box_area
 
@@ -258,15 +215,9 @@ def weighted_center_of_mass(boxes, scores, image_size, axis='x', min_score_thres
 
     return weighted_center
 
-"""def subTextonImage(position, text, font, fill) :
-    image = Image.open("astronaut_rides_horse.png")
-    draw  = ImageDraw.Draw(image)
-
-    draw.text(position, text, font=font, fill=(0, 0, 0))"""
-
-def transparency2():
+def transparency2(before_image, direction):
     # 이미지 파일 열기
-    image = Image.open('1000x200.png')
+    image = before_image
 
     # 이미지를 RGBA 모드로 변환 (알파 채널이 없는 경우에도 작동하도록 함)
     image = image.convert('RGBA')
@@ -276,14 +227,21 @@ def transparency2():
     new_image_data = []
     factor = 0.0032  # 값이 낮으면 범위가 증가
     min_alpha = 65  # 최소 투명도 (0에서 255 사이의 값으로 설정)
-    middle = width * 2 // 3
+    middle_w = width * 2 // 3
+    middle_h = height * 2 // 3
 
     sigma = 1
     for y in range(height):
         for x in range(width):
             item = image.getpixel((x, y))
-
-            alpha = int(255-(255-min_alpha)*gaussian(factor * x+ (1-factor) * middle, middle, sigma)/gaussian(middle, middle, sigma))
+            if direction == "left" :
+                alpha = int(255-(255-min_alpha)*gaussian(factor * x+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
+            elif direction == "right" :
+                alpha = int(255-(255-min_alpha)*gaussian(factor * (width-x)+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
+            elif direction == "down" :
+                alpha = int(255-(255-min_alpha)*gaussian(factor * y+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
+            else : 
+                alpha = int(255-(255-min_alpha)*gaussian(factor * (height-y)+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
 
             new_image_data.append((item[0], item[1], item[2], alpha))
 
@@ -292,7 +250,7 @@ def transparency2():
     new_image.putdata(new_image_data)
 
     # 결과 이미지 저장 및 출력
-    new_image.save('gradient_transparency_image_left_to_right_and_back.png')
+    return new_image
 
 
 def gaussian(x, mu, sigma):

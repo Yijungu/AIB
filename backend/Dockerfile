@@ -10,11 +10,11 @@ RUN django-admin startproject trydjango
 RUN pip install django-cors-headers
 RUN pip install djangorestframework
 RUN pip install openai
-#RUN pip install diffusers transformers accelerate scipy safetensors
+RUN pip install diffusers transformers accelerate scipy safetensors
 RUN pip install opencv-python
-#RUN pip install torchvision
+RUN pip install torchvision
 RUN pip install pillow
-#RUN pip install tensorflow
+RUN pip install tensorflow
 RUN pip install tensorflow-hub
 RUN pip install scipy
 RUN pip install mysqlclient
