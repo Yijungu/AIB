@@ -10,8 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
-from .api import makeGPT, makeStableDiffusion
-from .api import get_templates_and_textboxes
+from .api import makeGPT, makeStableDiffusion, textOnImage, get_templates_and_textboxes
+import os
 # Create your views here.
 
 def fetch_all_textboxes_and_templates():
@@ -30,13 +30,20 @@ def example_view(request):
     return render(request, 'example_template.html', context)
 
 def test_view(request):
-    if request.method == 'POST':
-        input_size = request.POST['size']
-        purpose_list = request.POST['purposes'].split(',')
-        textboxes_for_templates, valid_template_ids, input_size = get_templates_and_textboxes(input_size, purpose_list)
-        return render(request, 'result.html', {'textboxes_for_templates': textboxes_for_templates, 'valid_template_ids': valid_template_ids})
-    else:
-        return render(request, 'test.html')
+    if request.method == "POST":
+        size = request.POST.get('size')
+        purposes = request.POST.get('purposes').split(',')
+        texts = request.POST.get('texts').split(',')
+
+        # Call the function to generate images
+        textOnImage(texts, size, purposes)
+
+        # Get the list of generated image files
+        image_files = [f for f in os.listdir() if f.startswith('WebBanner_')]
+
+        return render(request, 'result.html', {'image_files': image_files})
+
+    return render(request, 'test.html')
 
 class TextboxList(APIView):
 

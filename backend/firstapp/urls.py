@@ -9,7 +9,7 @@ from . import api
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('example/', views.example_view, name='example_view'),
-    path('test/', test_view),
+    path('test/', views.test_view, name='test'),
     # path('api/', include('api.urls')),
 
     # 사용자가 아무것도 없는 경로로 들어온 경우

@@ -1,16 +1,13 @@
-<h1>Results</h1>
-<h2>Valid Template IDs</h2>
-<ul>
-{% for id in valid_template_ids %}
-    <li>{{ id }}</li>
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Generated Web Banners</h2>
+
+{% for image_file in image_files %}
+    <img src="{{ image_file }}" alt="WebBanner">
+    <p>{{ image_file }}</p>
 {% endfor %}
-</ul>
-<h2>Textboxes for Templates</h2>
-{% for template, textboxes in textboxes_for_templates.items %}
-    <h3>Template {{ template.template_id }}</h3>
-    <ul>
-    {% for textbox in textboxes %}
-        <li>{{ textbox.purpose }}</li>
-    {% endfor %}
-    </ul>
-{% endfor %}
+
+</body>
+</html>
