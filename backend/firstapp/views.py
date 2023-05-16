@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
 from .api import makeGPT, makeStableDiffusion
+from .api import get_templates_and_textboxes
 # Create your views here.
 
 def fetch_all_textboxes_and_templates():
@@ -27,6 +28,15 @@ def example_view(request):
         'all_templates': all_templates
     }
     return render(request, 'example_template.html', context)
+
+def test_view(request):
+    if request.method == 'POST':
+        input_size = request.POST['size']
+        purpose_list = request.POST['purposes'].split(',')
+        textboxes_for_templates, valid_template_ids, input_size = get_templates_and_textboxes(input_size, purpose_list)
+        return render(request, 'result.html', {'textboxes_for_templates': textboxes_for_templates, 'valid_template_ids': valid_template_ids})
+    else:
+        return render(request, 'test.html')
 
 class TextboxList(APIView):
 

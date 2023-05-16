@@ -1,0 +1,8 @@
+<form method="POST">
+    {% csrf_token %}
+    <label for="size">Size:</label><br>
+    <input type="text" id="size" name="size"><br>
+    <label for="purposes">Purposes (comma-separated):</label><br>
+    <input type="text" id="purposes" name="purposes"><br>
+    <input type="submit" value="Submit">
+</form>

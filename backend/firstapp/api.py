@@ -15,6 +15,8 @@ from .serializers import TemplateSerializer
 #from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
 from django.http import HttpRequest
+from collections import Counter
+from django.db.models import Prefetch
 
 #openai.api_key = 
 model = 'text-davinci-003'
@@ -284,3 +286,49 @@ def requestdb() :
     request.method = 'GET'  # or 'POST', 'PUT', etc., depending on the view function
     response = example_view(request)
     print(response.content.decode('utf-8'))
+
+def get_templates_and_textboxes(template_size, purpose_list):
+    # Get the number of textboxes from the length of the purpose list
+    textbox_number = len(purpose_list)
+
+    closest_size = get_nearest_size(template_size)
+
+    # Get all templates that match the condition
+    templates = Template.objects.filter(textbox_number=textbox_number, template_size=closest_size)
+
+    # Get the template IDs
+    template_ids = templates.values_list('template_id', flat=True)
+
+    # Create a dictionary to store the TextBoxes for each template
+    textboxes_for_templates = {}
+
+    # Create a list to store the template IDs that meet the condition
+    valid_template_ids = []
+
+    # Get the TextBoxes for each template and check if the purposes match
+    for template_id in template_ids:
+        textboxes = TextBox.objects.filter(template_id=template_id)
+        textboxes_for_templates[template_id] = list(textboxes)
+        
+        # Get the purposes of the TextBoxes for this template
+        purposes = [textbox.purpose for textbox in textboxes]
+        
+        # Check if the purposes match the required ones
+        if Counter(purposes) == Counter(purpose_list):
+            valid_template_ids.append(template_id)
+
+    return textboxes_for_templates, valid_template_ids, template_size
+
+def get_nearest_size(input_size):
+    # Split the input size into width and height and calculate the ratio
+    width, height = map(int, input_size.split(':'))
+    input_ratio = width / height
+
+    # Define the possible sizes and calculate their ratios
+    possible_sizes = ["1000:200", "600:400", "400:600", "200:1000"]
+    size_ratios = {size: int(size.split(':')[0]) / int(size.split(':')[1]) for size in possible_sizes}
+
+    # Find the size with the closest ratio to the input ratio
+    closest_size = min(size_ratios, key=lambda size: abs(size_ratios[size] - input_ratio))
+
+    return closest_size
