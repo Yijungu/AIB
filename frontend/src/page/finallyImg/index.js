@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageWithText } from "../../components/imgWithText/imgWithText";
+import { ImageWithEditableText } from "../../components/imgWithEditableText/imgWithEditableText";
 
 const LastPage = () => {
   const image = {
@@ -9,7 +9,7 @@ const LastPage = () => {
   };
   return (
     <>
-      <ImageWithText {...image} />
+      <ImageWithEditableText {...image} />
     </>
   );
 };
