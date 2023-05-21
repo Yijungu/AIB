@@ -165,7 +165,7 @@ def transparency2(before_image, direction):
             elif direction == "up" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * (height-y)+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
             else :
-                
+                alpha = int(255 - (255-min_alpha) * gaussian_2d(x, y, width // 2, height // 2, sigma, sigma) / gaussian_2d(width // 2, height // 2, sigma, sigma))
 
             new_image_data.append((item[0], item[1], item[2], alpha))
 
@@ -181,3 +181,9 @@ def transparency2(before_image, direction):
 
 def gaussian(x, mu, sigma):
     return (1 / (sigma * np.sqrt(2 * np.pi))) * np.exp(-((x - mu) ** 2) / (2 * sigma ** 2))
+
+def gaussian_2d(x, y, mu_x, mu_y, sigma_x, sigma_y):
+    term1 = 1 / (2 * np.pi * sigma_x * sigma_y)
+    term2 = np.exp(-((x - mu_x) ** 2) / (2 * sigma_x ** 2))
+    term3 = np.exp(-((y - mu_y) ** 2) / (2 * sigma_y ** 2))
+    return term1 * term2 * term3
