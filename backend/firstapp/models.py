@@ -2,10 +2,9 @@ from django.db import models
 
 class Template(models.Model):
     TEMPLATE_SIZE_CHOICES = (
-        ("1000:200", "1000:200"),
-        ("600:400", "600:400"),
-        ("400:600", "400:600"),
-        ("200:1000", "200:1000"),
+        ("1300:100", "1300:100"),
+        ("500:500", "500:500"),
+        ("100:1300", "100:1300"),
     )
 
     template_id = models.AutoField(primary_key=True)
@@ -35,11 +34,10 @@ class TextBox(models.Model):
     )
 
     template = models.ForeignKey(Template, on_delete=models.CASCADE, db_column="template_id")
-    textbox_x = models.IntegerField()
-    textbox_y = models.IntegerField()
+    position = models.FloatField()
     width_sort = models.CharField(max_length=5, choices=WIDTH_SORT_CHOICES)
     height_sort = models.CharField(max_length=4, choices=HEIGHT_SORT_CHOICES)
-    font_size = models.IntegerField()
+    font_size = models.FloatField()
     line_break = models.IntegerField()
     purpose = models.CharField(max_length=10, choices=PURPOSE_CHOICES)
 
