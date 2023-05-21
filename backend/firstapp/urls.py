@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import TextboxList, test_view
+from .views import test_view
 
 from . import views
-from . import api
+from . import makeImage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
