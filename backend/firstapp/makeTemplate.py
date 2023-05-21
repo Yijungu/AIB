@@ -70,14 +70,12 @@ def textOnImage(before_img, texts, size, required_purposes):
 
 
 def template(width, height, position, fontsize, size_ratio):
-    if size_ratio == "1000:200":
-        ref_width, ref_height = 1000, 200
-    elif size_ratio == "600:400":
-        ref_width, ref_height = 600, 400
-    elif size_ratio == "400:600":
-        ref_width, ref_height = 400, 600
-    elif size_ratio == "200:1000":
-        ref_width, ref_height = 200, 1000
+    if size_ratio == "1300:100":
+        ref_width, ref_height = 1300, 100
+    elif size_ratio == "500:500":
+        ref_width, ref_height = 500, 500
+    elif size_ratio == "100:1300":
+        ref_width, ref_height = 100, 1300
     else:
         raise ValueError(f"Unknown size ratio: {size_ratio}")
 
@@ -125,7 +123,7 @@ def get_nearest_size(input_size):
     input_ratio = width / height
 
     # Define the possible sizes and calculate their ratios
-    possible_sizes = ["1000:200", "600:400", "400:600", "200:1000"]
+    possible_sizes = ["1300:100", "500:500", "100:1300"]
     size_ratios = {size: int(size.split(':')[0]) / int(size.split(':')[1]) for size in possible_sizes}
 
     # Find the size with the closest ratio to the input ratio
