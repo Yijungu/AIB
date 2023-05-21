@@ -6,6 +6,7 @@ def makeWebBanner(product, texts, size, purposes):
     webBannerImage = makeStableDiffusion(product, width, height)
     axis = 'x' if width > height else 'y'
     direction = detect(webBannerImage, axis)
+    # direction의 값은 left(up) center right(down) 중 하나
     webBannerImage = transparency2(webBannerImage, direction)
     webBannerImage = add_white_background(webBannerImage)
     textOnImage(webBannerImage, texts, size, purposes)

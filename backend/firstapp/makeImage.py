@@ -80,15 +80,16 @@ def detect(image_data, axis):
     image = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
 
     boxes, scores, classes = detect_objects(image)
-    weighted_center = weighted_center_of_mass(boxes, scores, image.shape, axis)
 
-    if weighted_center is not None:
-        if weighted_center < 0.5:
-            return 'left' if axis == 'x' else 'up'
-        else:
-            return "right" if axis == 'x' else 'down'
-    else:
-        return "left"
+    #왼쪽, 가운데, 오른쪽 스코어가 반환되어야함    
+    left, center, right = weighted_center_of_mass(boxes, scores, image.shape, axis)
+
+    if min(left, center, right) == left :
+        return 'left' if axis == 'x' else 'up'
+    elif min(left, center, right) == center :
+        return 'center'
+    else :
+        return "right" if axis == 'x' else 'down'
 
 
 def detect_objects(image):
@@ -108,8 +109,10 @@ def detect_objects(image):
     return boxes, scores, classes
 
 def weighted_center_of_mass(boxes, scores, image_size, axis='x', min_score_thresh=.1):
-    weighted_center = 0
-    total_weight = 0
+
+    left_value = 0
+    center_value = 0
+    right_value = 0
 
     for i in range(len(boxes[0])):
       if scores[0][i] > min_score_thresh:
@@ -124,19 +127,15 @@ def weighted_center_of_mass(boxes, scores, image_size, axis='x', min_score_thres
 
             box_width = x2 - x1
             box_height = y2 - y1
-            box_area = box_width * box_height * image_size[0] * image_size[1]
-            weighted_center += center * box_area
-            total_weight += box_area
 
-    if total_weight > 0:
-        weighted_center /= total_weight
-    else:
-        if axis == 'x':
-            weighted_center = image_size[1] / 2
-        else:
-            weighted_center = image_size[0] / 2
+            if center < 0.5 :
+                left_value += box_width * box_height * image_size[0] * image_size[1]
+            if center > 0.5 :
+                right_value += box_width * box_height * image_size[0] * image_size[1]
+            if center < 0.66 & center > 0.33:
+                center_value += box_width * box_height * image_size[0] * image_size[1]
 
-    return weighted_center
+    return left_value, center_value, right_value
 
 def transparency2(before_image, direction):
     # 이미지 파일 열기
@@ -163,8 +162,10 @@ def transparency2(before_image, direction):
                 alpha = int(255-(255-min_alpha)*gaussian(factor * (width-x)+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
             elif direction == "down" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * y+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
-            else : 
+            elif direction == "up" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * (height-y)+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
+            else :
+                
 
             new_image_data.append((item[0], item[1], item[2], alpha))
 
