@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
-from .api import makeWebBanner
+from .makeWebBanner import makeWebBanner
 import os
 # Create your views here.
 
@@ -35,8 +35,6 @@ def test_view(request):
         size = request.POST.get('size')
         purposes = request.POST.get('purposes').split(',')
         texts = request.POST.get('texts').split(',')
-        
-        print(product)
 
         makeWebBanner(product, texts, size, purposes)
 
