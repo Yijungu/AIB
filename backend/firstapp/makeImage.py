@@ -82,7 +82,7 @@ def detect(image_data, axis):
     boxes, scores, classes = detect_objects(image)
 
     #왼쪽, 가운데, 오른쪽 스코어가 반환되어야함    
-    left, center, right = weighted_center_of_mass(boxes, scores, image.shape, axis)
+    left, center, right = write_position(boxes, scores, image.shape, axis)
 
     if min(left, center, right) == left :
         return 'left' if axis == 'x' else 'up'
@@ -90,6 +90,30 @@ def detect(image_data, axis):
         return 'center'
     else :
         return "right" if axis == 'x' else 'down'
+    
+def detect_square(image_data):
+    image_byte_arr = io.BytesIO()
+    image_data.save(image_byte_arr, format='PNG')
+    image_byte_arr = image_byte_arr.getvalue()
+
+    image_np = np.fromstring(image_byte_arr, np.uint8)
+    # image_np = np.fromstring(image_data, np.uint8)
+    image = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+
+    boxes, scores, classes = detect_objects(image)
+   
+    left, center, right, up, down = write_position_square(boxes, scores, image.shape)
+
+    if min(left, center, right, up, down) == left :
+        return 'left'
+    elif min(left, center, right, up, down) == center :
+        return 'center'
+    elif min(left, center, right, up, down) == right :
+        return "right"
+    elif min(left, center, right, up, down) == up :
+        return "up"
+    else :
+        return "down"
 
 
 def detect_objects(image):
@@ -108,7 +132,7 @@ def detect_objects(image):
 
     return boxes, scores, classes
 
-def weighted_center_of_mass(boxes, scores, image_size, axis='x', min_score_thresh=.1):
+def write_position(boxes, scores, image_size, axis='x', min_score_thresh=.1):
 
     left_value = 0
     center_value = 0
@@ -132,10 +156,42 @@ def weighted_center_of_mass(boxes, scores, image_size, axis='x', min_score_thres
                 left_value += box_width * box_height * image_size[0] * image_size[1]
             if center > 0.5 :
                 right_value += box_width * box_height * image_size[0] * image_size[1]
-            if center < 0.66 & center > 0.33:
+            if center < 0.66 and center > 0.33:
                 center_value += box_width * box_height * image_size[0] * image_size[1]
 
     return left_value, center_value, right_value
+
+def write_position_square(boxes, scores, image_size, min_score_thresh=.1):
+    left_value = 0
+    center_value = 0
+    right_value = 0
+    up_value = 0
+    down_value = 0
+
+    for i in range(len(boxes[0])):
+      if scores[0][i] > min_score_thresh:
+            y1, x1, y2, x2 = boxes[0][i]
+
+            center_x = (x1 + x2) / 2
+            center_y = (y1 + y2) / 2
+            
+            box_width = x2 - x1
+            box_height = y2 - y1
+            
+            score = box_width * box_height * image_size[0] * image_size[1]
+
+            if center_x < 0.5 :
+                left_value += score
+            if center_x > 0.5 :
+                right_value += score
+            if center_x < 0.66 and center_x > 0.33 and center_y < 0.66 and center_y > 0.33:
+                center_value += score
+            if center_y < 0.5 :
+                up_value += score
+            if center_y > 0.5 :
+                down_value += score
+
+    return left_value, center_value, right_value, up_value, down_value
 
 def transparency2(before_image, direction):
     # 이미지 파일 열기
