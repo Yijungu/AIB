@@ -212,16 +212,16 @@ def transparency2(before_image, direction):
     for y in range(height):
         for x in range(width):
             item = image.getpixel((x, y))
-            if direction == "left" :
+            if direction == "right" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * x+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
-            elif direction == "right" :
+            elif direction == "left" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * (width-x)+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
-            elif direction == "down" :
-                alpha = int(255-(255-min_alpha)*gaussian(factor * y+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
             elif direction == "up" :
+                alpha = int(255-(255-min_alpha)*gaussian(factor * y+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
+            elif direction == "down" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * (height-y)+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
             else :
-                alpha = int(255 - (255-min_alpha) * gaussian_2d(x, y, width // 2, height // 2, sigma, sigma) / gaussian_2d(width // 2, height // 2, sigma, sigma))
+                alpha = int(255 - (255-min_alpha) * gaussian_2d(factor * x+ (1-factor) * (width // 2), factor * y+ (1-factor) * (height // 2), width // 2, height // 2, sigma, sigma) / gaussian_2d(width // 2, height // 2, width // 2, height // 2, sigma, sigma))
 
             new_image_data.append((item[0], item[1], item[2], alpha))
 
