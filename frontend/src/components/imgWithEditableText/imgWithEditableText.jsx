@@ -10,32 +10,47 @@ const fontOptions = [
   // ...
 ];
 
-export const ImageWithEditableText = ({
+export const ImgWithEditableText = ({
   imageUrl,
-  initialText,
-  textPosition,
+  initialTexts,
+  textPositions,
 }) => {
   const containerRef = useRef(null);
   const systemRef = useRef(null);
-  const [text, setText] = useState(initialText);
+  const [texts, setTexts] = useState(initialTexts);
+  const [editingIndex, setEditingIndex] = useState(null);
   const [editing, setEditing] = useState(false);
   const [fontFamily, setFontFamily] = useState("Arial");
   const [fontSize, setFontSize] = useState(24);
 
-  const handleTextClick = () => {
+  const handleTextClick = (index) => {
+    setEditingIndex(index);
     setEditing(true);
   };
 
-  const handleTextChange = (e) => {
-    setText(e.target.value);
+  const handleTextChange = (e, index) => {
+    const newText = e.target.value;
+    setTexts((prevTexts) =>
+      prevTexts.map((text, i) => (i === index ? newText : text))
+    );
   };
 
   const handleFontChange = (e) => {
-    setFontFamily(e.target.value);
+    const newFontFamily = e.target.value;
+    setTexts((prevTexts) =>
+      prevTexts.map((text, index) =>
+        index === editingIndex ? { ...text, fontFamily: newFontFamily } : text
+      )
+    );
   };
 
   const handleFontSizeChange = (e) => {
-    setFontSize(Number(e.target.value));
+    const newFontSize = Number(e.target.value);
+    setTexts((prevTexts) =>
+      prevTexts.map((text, index) =>
+        index === editingIndex ? { ...text, fontSize: newFontSize } : text
+      )
+    );
   };
 
   const handleClickOutside = (e) => {
@@ -56,24 +71,31 @@ export const ImageWithEditableText = ({
     };
   }, []);
 
-  const textStyle = {
-    top: `${textPosition.y}px`,
-    left: `${textPosition.x}px`,
-    fontSize: `${fontSize}px`,
-    fontFamily: `${fontFamily}`,
-  };
+  const textStyles = textPositions.map((position, index) => ({
+    top: `${position.y}px`,
+    left: `${position.x}px`,
+    fontSize: texts[index]?.fontSize ? `${texts[index].fontSize}px` : undefined,
+    fontFamily: texts[index]?.fontFamily ? texts[index].fontFamily : undefined,
+  }));
 
-  const systemStyle = {
-    top: `${textPosition.y - 60}px`, // 시스템의 세로 위치 조정
-    left: `${textPosition.x}px`, // 시스템의 가로 위치 조정
-  };
+  const systemStyle = textPositions.map((position) => ({
+    top: `${position.y - 60}px`,
+    left: `${position.x}px`,
+  }));
 
   return (
     <div className="image-with-text" ref={containerRef}>
-      <img src={imageUrl} alt="Image" />
-      <div className="text-wrapper" style={textStyle} onClick={handleTextClick}>
-        {text}
-      </div>
+      <img src={imageUrl} alt="AIB Service and Project Completion" />
+      {texts.map((text, index) => (
+        <div
+          className="text-wrapper"
+          style={textStyles[index]}
+          onClick={() => handleTextClick(index)}
+          key={index}
+        >
+          {text.text}
+        </div>
+      ))}
       {editing && (
         <div className="system" style={systemStyle} ref={systemRef}>
           <div>

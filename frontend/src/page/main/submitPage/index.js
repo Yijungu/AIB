@@ -97,15 +97,8 @@ const SubmitPage = (props) => {
           />
           <br />
         </div>
-        <div id="form-color">
-          <label>3. 배너에 종합적으로 사용하고 싶은 색깔은 무엇인가요?</label>
-          <Color onSelectColorChange={onSelectColorChange} />
-          <br />
-        </div>
         <div id="form-comment">
-          <label>
-            4. 배너에서 사용하고자 하는 문구와 해당 문구의 목적을 선택하세요.
-          </label>
+          <Label q={questionData[2]} />
           <Comment onContentsChange={onContentsChange} />
           <br />
         </div>
