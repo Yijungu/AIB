@@ -55,10 +55,9 @@ const SubmitPage = (props) => {
     }
 
     axios
-      .post("http://localhost:8000/review/", {
+      .post("http://localhost:8000/aib_request/", {
         concept: text.first_text,
         include: text.second_text,
-        color: selectColor,
         contents: c,
       })
       .then((response) => {
