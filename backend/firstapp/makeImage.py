@@ -82,14 +82,18 @@ def detect(image_data, axis):
     boxes, scores, classes = detect_objects(image)
 
     #왼쪽, 가운데, 오른쪽 스코어가 반환되어야함    
-    left, center, right = write_position(boxes, scores, image.shape, axis)
+    left, right = write_position(boxes, scores, image.shape, axis)
 
-    if min(left, center, right) == left :
+    if left == 0 :
         return 'left' if axis == 'x' else 'up'
-    elif min(left, center, right) == center :
-        return 'center'
-    else :
+    elif right == 0 :
         return "right" if axis == 'x' else 'down'
+    elif left <= 0.25 and right >= 0.75:
+        return 'center'
+    elif (left + right) / 2 < 0.5 :
+        return "right" if axis == 'x' else 'down'
+    else :
+        return 'left' if axis == 'x' else 'up'
     
 def detect_square(image_data):
     image_byte_arr = io.BytesIO()
@@ -102,18 +106,29 @@ def detect_square(image_data):
 
     boxes, scores, classes = detect_objects(image)
    
-    left, center, right, up, down = write_position_square(boxes, scores, image.shape)
+    left, right, up, down = write_position_square(boxes, scores, image.shape)
 
-    if min(left, center, right, up, down) == left :
-        return 'left'
-    elif min(left, center, right, up, down) == center :
-        return 'center'
-    elif min(left, center, right, up, down) == right :
-        return "right"
-    elif min(left, center, right, up, down) == up :
+    if left == 0 :
+        return 'left' 
+    elif right == 0 :
+        return "right" 
+    elif up == 0 :
         return "up"
-    else :
+    elif down == 0 :
         return "down"
+    elif left <= 0.25 and right >= 0.75 and up <= 0.25 and down >= 0.75 :
+        return 'center'
+    elif min((left + right)/2,  1-(left + right)/2) > min((up + down)/2,  1-(up + down)/2):
+        if (up + down) / 2 < 0.5:
+            return 'down' 
+        else :
+            return 'up'
+    else :
+        if (left + right) / 2 < 0.5:
+            return 'right' 
+        else :  
+            return 'left'
+    
 
 
 def detect_objects(image):
@@ -135,8 +150,9 @@ def detect_objects(image):
 def write_position(boxes, scores, image_size, axis='x', min_score_thresh=.1):
 
     left_value = 0
-    center_value = 0
     right_value = 0
+    left_total_weight = 0
+    right_total_weight = 0
 
     for i in range(len(boxes[0])):
       if scores[0][i] > min_score_thresh:
@@ -151,22 +167,31 @@ def write_position(boxes, scores, image_size, axis='x', min_score_thresh=.1):
 
             box_width = x2 - x1
             box_height = y2 - y1
+            box_area = box_width * box_height * image_size[0] * image_size[1]
 
             if center < 0.5 :
-                left_value += box_width * box_height * image_size[0] * image_size[1]
-            if center > 0.5 :
-                right_value += box_width * box_height * image_size[0] * image_size[1]
-            if center < 0.66 and center > 0.33:
-                center_value += box_width * box_height * image_size[0] * image_size[1]
+                left_value += center * box_area
+                left_total_weight += box_area
+            else :
+                right_value += center * box_area
+                right_total_weight += box_area
 
-    return left_value, center_value, right_value
+    if left_value > 0:
+        left_value /= left_total_weight
+    if right_value > 0:
+        right_value /= right_total_weight
+
+    return left_value, right_value
 
 def write_position_square(boxes, scores, image_size, min_score_thresh=.1):
     left_value = 0
-    center_value = 0
     right_value = 0
     up_value = 0
     down_value = 0
+    left_total_weight = 0
+    right_total_weight = 0
+    up_total_weight = 0
+    down_total_weight = 0
 
     for i in range(len(boxes[0])):
       if scores[0][i] > min_score_thresh:
@@ -178,20 +203,33 @@ def write_position_square(boxes, scores, image_size, min_score_thresh=.1):
             box_width = x2 - x1
             box_height = y2 - y1
             
-            score = box_width * box_height * image_size[0] * image_size[1]
+            box_area = box_width * box_height * image_size[0] * image_size[1]
+            score_x = center_x * box_area
+            score_y = center_y * box_area
 
             if center_x < 0.5 :
-                left_value += score
+                left_value += score_x
+                left_total_weight += box_area
             if center_x > 0.5 :
-                right_value += score
-            if center_x < 0.66 and center_x > 0.33 and center_y < 0.66 and center_y > 0.33:
-                center_value += score
+                right_value += score_x
+                right_total_weight += box_area
             if center_y < 0.5 :
-                up_value += score
+                up_value += score_y
+                up_total_weight += box_area
             if center_y > 0.5 :
-                down_value += score
+                down_value += score_y
+                down_total_weight += box_area
 
-    return left_value, center_value, right_value, up_value, down_value
+    if left_value > 0:
+        left_value /= left_total_weight
+    if right_value > 0:
+        right_value /= right_total_weight
+    if up_value > 0:
+        up_value /= up_total_weight
+    if down_value > 0:
+        down_value /= down_total_weight
+
+    return left_value, right_value, up_value, down_value
 
 def transparency2(before_image, direction):
     # 이미지 파일 열기
@@ -212,13 +250,13 @@ def transparency2(before_image, direction):
     for y in range(height):
         for x in range(width):
             item = image.getpixel((x, y))
-            if direction == "right" :
+            if direction == "left" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * x+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
-            elif direction == "left" :
+            elif direction == "right" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * (width-x)+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
-            elif direction == "up" :
-                alpha = int(255-(255-min_alpha)*gaussian(factor * y+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
             elif direction == "down" :
+                alpha = int(255-(255-min_alpha)*gaussian(factor * y+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
+            elif direction == "up" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * (height-y)+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
             else :
                 alpha = int(255 - (255-min_alpha) * gaussian_2d(factor * x+ (1-factor) * (width // 2), factor * y+ (1-factor) * (height // 2), width // 2, height // 2, sigma, sigma) / gaussian_2d(width // 2, height // 2, width // 2, height // 2, sigma, sigma))

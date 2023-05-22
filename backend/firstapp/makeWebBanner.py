@@ -9,7 +9,7 @@ def makeWebBanner(product, texts, size, purposes):
     # direction의 값은 left(up) center right(down) 중 하나
     webBannerImage = transparency2(webBannerImage, direction)
     webBannerImage = add_white_background(webBannerImage)
-    textOnImage(webBannerImage, texts, size, purposes)
+    textOnImage(webBannerImage, texts, size, purposes, direction)
 
 def calculate_axis(width, height):
     # Split the input size into width and height and calculate the ratio

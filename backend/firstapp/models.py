@@ -2,9 +2,9 @@ from django.db import models
 
 class Template(models.Model):
     TEMPLATE_SIZE_CHOICES = (
-        ("1300:100", "1300:100"),
+        ("1200:360", "1200:360"),
         ("500:500", "500:500"),
-        ("100:1300", "100:1300"),
+        ("360:1200", "360:1200"),
     )
 
     template_id = models.AutoField(primary_key=True)

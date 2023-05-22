@@ -6,21 +6,21 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Add a template
-        template = Template.objects.create(textbox_number=3, template_size="1300:100")
+        template = Template.objects.create(textbox_number=3, template_size="1200:360")
 
         # Add textboxes
         TextBox.objects.create(
-            template=template, position=41, 
+            template=template, position=74, 
             width_sort="left", height_sort="up", 
             font_size=24, line_break=1, purpose="큰 홍보문구"
         )
         TextBox.objects.create(
-            template=template, position=98, 
+            template=template, position=177, 
             width_sort="left", height_sort="up", 
             font_size=12, line_break=0, purpose="작은 홍보문구"
         )
         TextBox.objects.create(
-            template=template, position=140, 
+            template=template, position=252, 
             width_sort="left", height_sort="up", 
             font_size=7, line_break=0, purpose="시간&장소"
         )

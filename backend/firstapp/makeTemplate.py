@@ -5,7 +5,7 @@ from .views import *
 from collections import Counter
 from PIL import Image, ImageDraw, ImageFont
 
-def textOnImage(before_img, texts, size, required_purposes):
+def textOnImage(before_img, texts, size, required_purposes, direction):
     # Parsing width and height from size
     width, height = map(int, size.split(':'))
 
@@ -27,7 +27,7 @@ def textOnImage(before_img, texts, size, required_purposes):
         font_sizes = []
         alignments = []
         for textbox in textboxes:
-            position, font_size = template(width, height, (textbox.textbox_x, textbox.textbox_y), textbox.font_size, closest_size)
+            position, font_size = template(width, height, textbox.position, textbox.font_size, closest_size, direction)
             positions.append(position)
             font_sizes.append(font_size)
             alignments.append(textbox.width_sort)
@@ -69,20 +69,44 @@ def textOnImage(before_img, texts, size, required_purposes):
         image.save(f'WebBanner_{template_id}.png')
 
 
-def template(width, height, position, fontsize, size_ratio):
-    if size_ratio == "1300:100":
-        ref_width, ref_height = 1300, 100
+def template(width, height, position, fontsize, size_ratio, direction):
+
+    position_XY = (0, 0)
+
+    if size_ratio == "1200:360":
+        ref_width, ref_height = 1200, 360
+        if direction == 'left':
+            position_XY = (math.ceil(width/ref_width * 282), math.ceil(height/ref_height * position))
+        elif direction == 'right' :
+            position_XY = (math.ceil(width/ref_width * 682), math.ceil(height/ref_height * position))
+        else:
+            position_XY = (math.ceil(width/ref_width * 482), math.ceil(height/ref_height * position))
     elif size_ratio == "500:500":
         ref_width, ref_height = 500, 500
-    elif size_ratio == "100:1300":
-        ref_width, ref_height = 100, 1300
+        if direction == 'left':
+            position_XY = (math.ceil(width/ref_width * 282), math.ceil(height/ref_height * position))
+        elif direction == 'right' :
+            position_XY = (math.ceil(width/ref_width * 682), math.ceil(height/ref_height * position))
+        elif direction == 'up':
+            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 282))
+        elif direction == 'down' :
+            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 682))
+        # else :
+        #     position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * ???))
+    elif size_ratio == '360:1200':
+        ref_width, ref_height = 360, 1200
+        if direction == 'up':
+            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 282))
+        elif direction == 'down' :
+            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 682))                                                                                                                                   
+        else :
+            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 482))
     else:
         raise ValueError(f"Unknown size ratio: {size_ratio}")
 
-    position = (math.ceil(width/ref_width * position[0]), math.ceil(height/ref_height * position[1]))
     fontsize = math.ceil(height/ref_height * fontsize)
 
-    return position, fontsize
+    return position_XY, fontsize
 
 
 def get_templates_and_textboxes(template_size, purpose_list):
@@ -122,11 +146,9 @@ def get_nearest_size(input_size):
     width, height = map(int, input_size.split(':'))
     input_ratio = width / height
 
-    # Define the possible sizes and calculate their ratios
-    possible_sizes = ["1300:100", "500:500", "100:1300"]
-    size_ratios = {size: int(size.split(':')[0]) / int(size.split(':')[1]) for size in possible_sizes}
-
-    # Find the size with the closest ratio to the input ratio
-    closest_size = min(size_ratios, key=lambda size: abs(size_ratios[size] - input_ratio))
-
-    return closest_size
+    if input_ratio > 1.857:
+        return '1200:360'
+    elif input_ratio < 0.538:
+        return '360:1200'
+    else :
+        return '500:500'
