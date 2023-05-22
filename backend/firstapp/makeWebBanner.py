@@ -7,7 +7,7 @@ def makeWebBanner(product, texts, size, purposes):
     axis = calculate_axis(width, height)
     direction = detect(webBannerImage, axis) if axis != 'square' else detect_square(webBannerImage)
     # direction의 값은 left(up) center right(down) 중 하나
-    webBannerImage = transparency2(webBannerImage, direction)
+    webBannerImage = transparency2(webBannerImage, direction, axis)
     webBannerImage = add_white_background(webBannerImage)
     textOnImage(webBannerImage, texts, size, purposes, direction)
 

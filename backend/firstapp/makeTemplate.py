@@ -10,7 +10,7 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
     width, height = map(int, size.split(':'))
 
     # Calling the function to get templates and textboxes
-    textboxes_for_templates, valid_template_ids, closest_size = get_templates_and_textboxes(size, required_purposes)
+    textboxes_for_templates, valid_template_ids, closest_size = get_templates_and_textboxes(size, required_purposes, direction)
 
     # If there are no valid templates, return immediately
     if not valid_template_ids:
@@ -81,18 +81,22 @@ def template(width, height, position, fontsize, size_ratio, direction):
             position_XY = (math.ceil(width/ref_width * 682), math.ceil(height/ref_height * position))
         else:
             position_XY = (math.ceil(width/ref_width * 482), math.ceil(height/ref_height * position))
-    elif size_ratio == "500:500":
+    elif size_ratio == "500:500-X":
         ref_width, ref_height = 500, 500
         if direction == 'left':
             position_XY = (math.ceil(width/ref_width * 282), math.ceil(height/ref_height * position))
         elif direction == 'right' :
             position_XY = (math.ceil(width/ref_width * 682), math.ceil(height/ref_height * position))
-        elif direction == 'up':
+        else :
+            position_XY = (math.ceil(width/ref_width * 482), math.ceil(height/ref_height * position))
+    elif size_ratio == "500:500-Y":
+        ref_width, ref_height = 500, 500
+        if direction == 'up':
             position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 282))
         elif direction == 'down' :
             position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 682))
-        # else :
-        #     position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * ???))
+        else :
+            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 482))
     elif size_ratio == '360:1200':
         ref_width, ref_height = 360, 1200
         if direction == 'up':
@@ -109,11 +113,11 @@ def template(width, height, position, fontsize, size_ratio, direction):
     return position_XY, fontsize
 
 
-def get_templates_and_textboxes(template_size, purpose_list):
+def get_templates_and_textboxes(template_size, purpose_list, direction):
     # Get the number of textboxes from the length of the purpose list
     textbox_number = len(purpose_list)
 
-    closest_size = get_nearest_size(template_size)
+    closest_size = get_nearest_size(template_size, direction)
 
     # Get all templates that match the condition
     templates = Template.objects.filter(textbox_number=textbox_number, template_size=closest_size)
@@ -141,7 +145,7 @@ def get_templates_and_textboxes(template_size, purpose_list):
 
     return textboxes_for_templates, valid_template_ids, closest_size
 
-def get_nearest_size(input_size):
+def get_nearest_size(input_size, direction):
     # Split the input size into width and height and calculate the ratio
     width, height = map(int, input_size.split(':'))
     input_ratio = width / height
@@ -151,4 +155,7 @@ def get_nearest_size(input_size):
     elif input_ratio < 0.538:
         return '360:1200'
     else :
-        return '500:500'
+        if direction == 'left' or direction == 'right':
+            return '500:500-X'
+        else :
+            return '500:500-Y'

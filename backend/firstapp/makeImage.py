@@ -32,6 +32,9 @@ def makeGPT(request) :
 
 def makeStableDiffusion(answer, width, height) :
     print("쿠다 가능 :{}".format(torch.cuda.is_available()))
+
+    new_width =  width + (8 - width % 8)
+    new_height =  height + (8 - height % 8)
     
     # Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead
     pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
@@ -45,12 +48,14 @@ def makeStableDiffusion(answer, width, height) :
 
     prompt = answer + ", painting, advertisement"
 
-    image = pipe(prompt, height=height, width=width, 
+    image = pipe(prompt, height=new_height, width=new_width, 
                 negative_prompt="text box, "+"people, "+"person, "+"face", guidance_scale=4).images[0]
     
-    image.save("makeStableDiffusion.png")
+    croped_image = image.crop((0, 0, width, height))
 
-    return image
+    croped_image.save("makeStableDiffusion.png")
+
+    return croped_image
 
 
 
@@ -231,7 +236,7 @@ def write_position_square(boxes, scores, image_size, min_score_thresh=.1):
 
     return left_value, right_value, up_value, down_value
 
-def transparency2(before_image, direction):
+def transparency2(before_image, direction, axis):
     # 이미지 파일 열기
     image = before_image
 
@@ -241,12 +246,18 @@ def transparency2(before_image, direction):
     # 픽셀 단위로 투명도 변경
     width, height = image.size
     new_image_data = []
-    factor = 0.0032  # 값이 낮으면 범위가 증가
+    
     min_alpha = 65  # 최소 투명도 (0에서 255 사이의 값으로 설정)
     middle_w = width * 2 // 3
     middle_h = height * 2 // 3
+    
+    if axis == 'square':
+        sigma = 2
+        factor = 0.01  # 값이 낮으면 범위가 증가
+    else :
+        sigma = 1
+        factor = 0.0032  # 값이 낮으면 범위가 증가
 
-    sigma = 1
     for y in range(height):
         for x in range(width):
             item = image.getpixel((x, y))
