@@ -58,7 +58,6 @@ const SubmitPage = (props) => {
       .post("http://localhost:8000/review/", {
         concept: text.first_text,
         include: text.second_text,
-        color: selectColor,
         contents: c,
       })
       .then((response) => {

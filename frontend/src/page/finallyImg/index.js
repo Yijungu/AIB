@@ -25,7 +25,7 @@ const LastPage = () => {
       const response = await axios.get("http://localhost/api/image");
       return response.data;
     } catch (error) {
-      throw new Error("Failed to fetch image");
+      throw new Error("Failed to fetch image", error);
     }
   };
 
