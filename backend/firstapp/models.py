@@ -3,7 +3,8 @@ from django.db import models
 class Template(models.Model):
     TEMPLATE_SIZE_CHOICES = (
         ("1200:360", "1200:360"),
-        ("500:500", "500:500"),
+        ("500:500-X", "500:500-X"),
+        ("500:500-Y", "500:500-Y"),
         ("360:1200", "360:1200"),
     )
 
