@@ -12,6 +12,7 @@ from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
 from .makeWebBanner import makeWebBanner
 import os
+import json
 # Create your views here.
 
 def fetch_all_textboxes_and_templates():
@@ -44,6 +45,23 @@ def test_view(request):
         return render(request, 'result.html', {'image_files': image_files})
 
     return render(request, 'test.html')
+
+@csrf_exempt
+def request_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        concept = data['concept']
+        include = data['include']
+        contents = data['contents']
+        print(concept,include,contents)
+        # 이제 concept, include, contents를 사용하여 필요한 작업을 수행할 수 있습니다.
+
+        # 작업이 끝나면, JsonResponse를 사용하여 응답을 보냅니다.
+        return JsonResponse({'message': 'Data received'})
+
+    else:
+        # POST 요청이 아닌 경우, 에러 메시지를 보냅니다.
+        return JsonResponse({'error': 'Invalid method'}, status=400)
 
 # class TextboxList(APIView):
 
