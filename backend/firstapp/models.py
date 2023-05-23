@@ -10,7 +10,7 @@ class Template(models.Model):
 
     template_id = models.AutoField(primary_key=True)
     textbox_number = models.IntegerField()
-    template_size = models.CharField(max_length=8, choices=TEMPLATE_SIZE_CHOICES)
+    template_size = models.CharField(max_length=10, choices=TEMPLATE_SIZE_CHOICES)
 
     class Meta:
         db_table = 'Template'
