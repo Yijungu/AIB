@@ -38,7 +38,8 @@ services:
   frontend:
     build: ./frontend
     # 연결할 외부 디렉토리 : 컨테이너 내 디렉토리
-    volumes:
+    volumes: 
       - ./frontend:/home/node/app
+      - /home/node/app/node_modules
     ports:
       - "3000:3000"

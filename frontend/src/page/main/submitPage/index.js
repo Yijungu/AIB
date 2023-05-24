@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
@@ -9,7 +9,12 @@ import { Comment } from "../../../components/comment/comment";
 import { Color } from "../../../components/selectColor/color";
 import { Menu } from "../../../components/menu/menu";
 
+
+import { MyContext } from "../../../App";
+
 const SubmitPage = (props) => {
+  const context = useContext(MyContext);
+  const { imageUrl, setImageUrl } = context;
   const navigate = useNavigate();
   const [text, setText] = useState({
     first_text: "",
@@ -59,9 +64,12 @@ const SubmitPage = (props) => {
         concept: text.first_text,
         include: text.second_text,
         contents: c,
-      })
+      }, { responseType: 'blob' }) // Blob 타입으로 응답을 받도록 설정
       .then((response) => {
-        console.log(response);
+        const imageUrl = URL.createObjectURL(response.data);
+        console.log(imageUrl);
+        setImageUrl(imageUrl); // 이미지 URL을 상위 컴포넌트에 전달
+        navigate("/last")
       })
       .catch((error) => {
         console.log(error);
