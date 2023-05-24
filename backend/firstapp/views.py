@@ -4,13 +4,16 @@ from django.shortcuts import render, HttpResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import Http404, JsonResponse
-
+from django.http import Http404, JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
 from .makeWebBanner import makeWebBanner
+
+from PIL import Image
+
+import io
 import os
 import json
 # Create your views here.
@@ -56,12 +59,20 @@ def request_view(request):
         print(concept,include,contents)
         # 이제 concept, include, contents를 사용하여 필요한 작업을 수행할 수 있습니다.
 
+        img = Image.open("makeStableDiffusion.png")
+        img_io = io.BytesIO()
+        img.save(img_io, 'PNG')
+        img_io.seek(0)
+
+
         # 작업이 끝나면, JsonResponse를 사용하여 응답을 보냅니다.
-        return JsonResponse({'message': 'Data received'})
+        return FileResponse(img_io, content_type='png')
 
     else:
         # POST 요청이 아닌 경우, 에러 메시지를 보냅니다.
         return JsonResponse({'error': 'Invalid method'}, status=400)
+
+
 
 # class TextboxList(APIView):
 
