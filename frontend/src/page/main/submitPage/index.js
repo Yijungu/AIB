@@ -2,89 +2,101 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
+
+// components
 import { questionData } from "../../../data/QuestionData";
 import { Question } from "../../../components/question/question";
 import { Label } from "../../../components/label/label";
 import { Comment } from "../../../components/comment/comment";
-import { Color } from "../../../components/selectColor/color";
 import { Menu } from "../../../components/menu/menu";
-
+import { Logo } from "../../../components/logo/logo";
 
 import { MyContext } from "../../../App";
 
 const SubmitPage = (props) => {
   const context = useContext(MyContext);
-  const { imageUrl, setImageUrl } = context;
+  const {
+    imageUrl,
+    setImageUrl,
+    texts,
+    setTexts,
+    position,
+    setPosition,
+    fontSize,
+    setFontSize,
+    kerning,
+    setKerning,
+    alignments,
+    setAlignments,
+  } = context;
+
   const navigate = useNavigate();
   const [text, setText] = useState({
     first_text: "",
     second_text: "",
   });
-  const [selectColor, setSelectColor] = useState("");
   const [contents, setContents] = useState([{ select: "", comment: "" }]);
 
   const { first_text, second_text } = text;
 
   const onTextChange = (e) => {
     const { name, value } = e.target;
-    setText({
-      ...text,
+    setText((prevState) => ({
+      ...prevState,
       [name]: value,
-    });
-  };
-
-  const onSelectColorChange = (newColor) => {
-    setSelectColor(newColor);
+    }));
   };
 
   const onContentsChange = (newComments, newSelects) => {
-    const newContents = [
-      ...contents,
-      { select: newSelects, comment: newComments },
-    ];
-    setContents(newContents);
-    console.log(contents);
+    const newContent = { select: newSelects, comment: newComments };
+    setContents((prevState) => [...prevState, newContent]);
   };
 
-  const onClickSubmit = (e) => {
+  const onClickSubmit = async (e) => {
     e.preventDefault();
 
-    const c = [];
-    const i_len = contents[contents.length - 1].comment.length;
-    for (let i = 0; i < i_len; i++) {
-      c.push({
-        id: i,
-        select: contents[contents.length - 1].select[i],
-        comment: contents[contents.length - 1].comment[i],
-      });
-    }
+    const c = contents[contents.length - 1].comment.map((comment, index) => ({
+      id: index,
+      select: contents[contents.length - 1].select[index],
+      comment: comment,
+    }));
 
-    axios
-      .post("http://localhost:8000/aib_request/", {
-        concept: text.first_text,
-        include: text.second_text,
-        contents: c,
-      }, { responseType: 'blob' }) // Blob 타입으로 응답을 받도록 설정
-      .then((response) => {
-        const imageUrl = URL.createObjectURL(response.data);
-        console.log(imageUrl);
-        setImageUrl(imageUrl); // 이미지 URL을 상위 컴포넌트에 전달
-        navigate("/last")
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/aib_request/",
+        {
+          concept: first_text,
+          include: second_text,
+          contents: c,
+        },
+        { responseType: "blob" }
+      );
+
+      const imgBlob = await response.data;
+      const texts = JSON.parse(response.headers.get("texts"));
+      const position = JSON.parse(response.headers.get("position"));
+      const font_size = JSON.parse(response.headers.get("font_size"));
+      const kerning = JSON.parse(response.headers.get("kerning"));
+      const alignments = JSON.parse(response.headers.get("alignments"));
+
+      const imgURL = URL.createObjectURL(imgBlob);
+      setImageUrl(imgURL);
+      setTexts(texts);
+      setPosition(position);
+      setFontSize(font_size);
+      setKerning(kerning);
+      setAlignments(alignments);
+
+      navigate("/last");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
       <Menu />
-      <div id="logo">
-        <p style={{ fontSize: 20 }}>
-          <b style={{ fontSize: 36, color: "rgb(100,100,255)" }}>A.I.B</b>
-          anner
-        </p>
-      </div>
+      <Logo />
       <div id="container-First">
         <div id="form-question">
           <Label q={questionData[0]} />
@@ -111,7 +123,7 @@ const SubmitPage = (props) => {
         </div>
         <form>
           <div id="submit">
-            <button id="submitButton" type="sumbit" onClick={onClickSubmit}>
+            <button id="submitButton" type="submit" onClick={onClickSubmit}>
               Submit
             </button>
           </div>

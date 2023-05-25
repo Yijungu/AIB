@@ -1,15 +1,23 @@
 import React, { useContext } from "react";
 import { ImgWithEditableText } from "../../components/imgWithEditableText/imgWithEditableText";
 import { MyContext } from "../../App"; // 경로는 알맞게 수정해주세요
+import "./index.css";
+import { Logo } from "../../components/logo/logo";
 
 const LastPage = () => {
-  const { imageUrl } = useContext(MyContext);
-  console.log(imageUrl)
+  const { imageUrl, texts, position, fontSize, kerning, alignments } =
+    useContext(MyContext);
+  console.log(imageUrl);
+  const imgTest = "./testImgJpeg.jpeg";
   const image = {
-    imageUrl_front: imageUrl,
+    imageUrl_front: imgTest,
     initialTexts: [
-      { text: "AIB Good Service", fontSize: 24, fontFamily: "Arial" },
-      { text: "AIB Project Finish!!!", fontSize: 18, fontFamily: "Arial" },
+      {
+        text: "AIB는\n 아이브라고 읽어!!@#1234",
+        fontSize: 24,
+        fontFamily: "Arial",
+      },
+      { text: "AIB Project\n 末!!!", fontSize: 18, fontFamily: "Arial" },
     ],
     textPositions: [
       { x: 500, y: 200 },
@@ -18,13 +26,14 @@ const LastPage = () => {
   };
 
   return (
-    <>
+    <div id="imgEdit">
+      <Logo />
       <ImgWithEditableText
         imageUrl={image.imageUrl_front}
         initialTexts={image.initialTexts}
         textPositions={image.textPositions}
       />
-    </>
+    </div>
   );
 };
 
