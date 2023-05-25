@@ -31,13 +31,6 @@ export const ImgWithEditableText = ({
     setEditing(true);
   };
 
-  const handleTextChange = (e, index) => {
-    const newText = e.target.value;
-    setTexts((prevTexts) =>
-      prevTexts.map((text, i) => (i === index ? newText : text))
-    );
-  };
-
   const handleFontChange = (e) => {
     const newFontFamily = e.target.value;
     setTexts((prevTexts) =>
@@ -126,7 +119,11 @@ export const ImgWithEditableText = ({
   }, [dragging, editingIndex, startPos]);
 
   return (
-    <div className="image-with-text" ref={containerRef}>
+    <div
+      style={{ position: "relative", display: "inline-block" }}
+      className="image-with-text"
+      ref={containerRef}
+    >
       <img src={imageUrl} alt="AIB Service and Project Completion" />
       {texts.map((text, index) => (
         <div
