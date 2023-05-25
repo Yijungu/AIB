@@ -38,19 +38,27 @@ export const ImgWithEditableText = ({
   const handleFontChange = (e) => {
     const newFontFamily = e.target.value;
     setTexts((prevTexts) =>
-      prevTexts.map((text, index) =>
-        index === editingIndex ? { ...text, fontFamily: newFontFamily } : text
-      )
+      prevTexts.map((text, index) => {
+        if (index === editingIndex) {
+          return { ...text, fontFamily: newFontFamily };
+        }
+        return text;
+      })
     );
+    setFontFamily(newFontFamily); // 수정: 상태 업데이트
   };
 
   const handleFontSizeChange = (e) => {
     const newFontSize = Number(e.target.value);
     setTexts((prevTexts) =>
-      prevTexts.map((text, index) =>
-        index === editingIndex ? { ...text, fontSize: newFontSize } : text
-      )
+      prevTexts.map((text, index) => {
+        if (index === editingIndex) {
+          return { ...text, fontSize: newFontSize };
+        }
+        return text;
+      })
     );
+    setFontSize(newFontSize); // 수정: 상태 업데이트
   };
 
   const handleClickOutside = (e) => {
@@ -74,13 +82,8 @@ export const ImgWithEditableText = ({
   const textStyles = textPositions.map((position, index) => ({
     top: `${position.y}px`,
     left: `${position.x}px`,
-    fontSize: texts[index]?.fontSize ? `${texts[index].fontSize}px` : undefined,
-    fontFamily: texts[index]?.fontFamily ? texts[index].fontFamily : undefined,
-  }));
-
-  const systemStyle = textPositions.map((position) => ({
-    top: `${position.y - 60}px`,
-    left: `${position.x}px`,
+    fontSize: texts[index]?.fontSize ? `${texts[index].fontSize}px` : "24px",
+    fontFamily: texts[index]?.fontFamily ? texts[index].fontFamily : "Arial",
   }));
 
   return (
@@ -97,7 +100,14 @@ export const ImgWithEditableText = ({
         </div>
       ))}
       {editing && (
-        <div className="system" style={systemStyle} ref={systemRef}>
+        <div
+          className="system"
+          style={{
+            top: `${textPositions[editingIndex].y - 60}px`,
+            left: `${textPositions[editingIndex].x}px`,
+          }}
+          ref={systemRef}
+        >
           <div>
             <label>
               Font Family: &nbsp;
