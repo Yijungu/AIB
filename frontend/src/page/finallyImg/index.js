@@ -31,7 +31,7 @@ const LastPage = () => {
       <ImgWithEditableText
         imageUrl={image.imageUrl_front}
         initialTexts={image.initialTexts}
-        textPositions={image.textPositions}
+        initialTextPositions={image.textPositions}
       />
     </div>
   );
