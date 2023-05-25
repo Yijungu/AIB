@@ -1,6 +1,9 @@
 .image-with-text {
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    white-space: pre-line;
+    text-align: center;
   }
   
   .image-with-text img {
