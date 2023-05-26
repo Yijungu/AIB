@@ -6,6 +6,7 @@ from collections import Counter
 from PIL import Image, ImageDraw, ImageFont
 
 def textOnImage(before_img, texts, size, required_purposes, direction):
+
     # Parsing width and height from size
     width, height = map(int, size.split(':'))
 
@@ -26,24 +27,28 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
         positions = []
         font_sizes = []
         alignments = []
+        kernings = []
         for textbox in textboxes:
-            position, font_size = template(width, height, textbox.position, textbox.font_size, closest_size, direction)
+            font_size = resize_font(height,textbox.font_size, closest_size)
+            kerning = 2.9696 - 1.5565 *np.log(font_size)
+            position = set_position(width, height, texts, font_size, kerning, textbox.width_sort, textbox.position, closest_size, direction)
             positions.append(position)
             font_sizes.append(font_size)
             alignments.append(textbox.width_sort)
+            kernings.append(kerning)
 
         image = before_img
         draw  = ImageDraw.Draw(image)
 
         # Font settings
         font_path = 'Hancom_Gothic_Bold.ttf'
-        kerning = [2.9696 - 1.5565 *np.log(x) for x in font_sizes]
-
+        print(font_sizes)
         # Text drawing
         for i in range(len(texts)):
             font = ImageFont.truetype(font_path, font_sizes[i])
             (x, y) = positions[i]
             alignment = alignments[i]
+            print(alignment)
             lines = texts[i].split('n')
             for line in lines:
                 x_start = x
@@ -51,67 +56,82 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
                 if alignment == "left":
                     for char in line:
                         draw.text((x, y), char, font=font, fill=(0, 0, 0))
-                        x += font.getsize(char)[0] + kerning[i]
+                        x += font.getsize(char)[0] + kernings[i]
                 elif alignment == "right":
                     for char in reversed(line):
-                        x -= font.getsize(char)[0] + kerning[i]
+                        x -= font.getsize(char)[0] + kernings[i]
                         draw.text((x, y), char, font=font, fill=(0, 0, 0))
                 elif alignment == "center":
-                    line_width = sum(font.getsize(char)[0] + kerning[i] for char in line)
+                    line_width = sum(font.getsize(char)[0] + kernings[i] for char in line)
                     x_start -= line_width / 2
                     for char in line:
                         draw.text((x_start, y), char, font=font, fill=(0, 0, 0))
-                        x_start += font.getsize(char)[0] + kerning[i]
+                        x_start += font.getsize(char)[0] + kernings[i]
                 y += font.getsize('가')[1]
                 x = x_start
 
         # Save image with a unique filename
-        image.save(f'WebBanner_{template_id}.png')
+    return image, texts, positions, font_sizes, kernings, alignments
 
 
-def template(width, height, position, fontsize, size_ratio, direction):
-
-    position_XY = (0, 0)
+def resize_font(height, fontsize, size_ratio):
 
     if size_ratio == "1200:360":
         ref_width, ref_height = 1200, 360
-        if direction == 'left':
-            position_XY = (math.ceil(width/ref_width * 282), math.ceil(height/ref_height * position))
-        elif direction == 'right' :
-            position_XY = (math.ceil(width/ref_width * 682), math.ceil(height/ref_height * position))
-        else:
-            position_XY = (math.ceil(width/ref_width * 482), math.ceil(height/ref_height * position))
     elif size_ratio == "500:500-X":
         ref_width, ref_height = 500, 500
-        if direction == 'left':
-            position_XY = (math.ceil(width/ref_width * 282), math.ceil(height/ref_height * position))
-        elif direction == 'right' :
-            position_XY = (math.ceil(width/ref_width * 682), math.ceil(height/ref_height * position))
-        else :
-            position_XY = (math.ceil(width/ref_width * 482), math.ceil(height/ref_height * position))
     elif size_ratio == "500:500-Y":
         ref_width, ref_height = 500, 500
-        if direction == 'up':
-            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 282))
-        elif direction == 'down' :
-            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 682))
-        else :
-            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 482))
     elif size_ratio == '360:1200':
         ref_width, ref_height = 360, 1200
-        if direction == 'up':
-            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 282))
-        elif direction == 'down' :
-            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 682))                                                                                                                                   
-        else :
-            position_XY = (math.ceil(width/ref_width * position), math.ceil(height/ref_height * 482))
     else:
         raise ValueError(f"Unknown size ratio: {size_ratio}")
 
-    fontsize = math.ceil(height/ref_height * fontsize)
+    fontsize = int(math.ceil(height/ref_height * fontsize))
 
-    return position_XY, fontsize
+    return fontsize
 
+def set_position(width, height, texts, font_sizes, kerning, alignments, position, size_ratio, direction):
+
+    font_path = 'Hancom_Gothic_Bold.ttf'
+    distance = 100
+    new_position = (0,0)
+
+    if size_ratio == "1200:360":
+        ref_width, ref_height = 1200, 360
+    elif size_ratio == "500:500-X":
+        ref_width, ref_height = 500, 500
+    elif size_ratio == "500:500-Y":
+        ref_width, ref_height = 500, 500
+    elif size_ratio == '360:1200':
+        ref_width, ref_height = 360, 1200
+
+    if direction == "left":
+        if alignments == "left":
+            new_position = (math.ceil(width/ref_width *distance), math.ceil(height/ref_height * position))
+        elif alignments == "center":
+            new_position = (math.ceil(width/ref_width *distance), math.ceil(height/ref_height * position))
+    else:
+         
+        biggest_line_width = 0
+
+        for i in range(len(texts)):
+            font = ImageFont.truetype(font_path, font_sizes[i])
+            lines = texts[i].split('\n')
+            for line in lines:
+                biggest_line_width = sum(font.getsize(char)[0] + kerning for char in line) if sum(font.getsize(char)[0] + kerning for char in line) > biggest_line_width else biggest_line_width 
+        if direction == 'right':
+            if alignments == "left":
+                new_position = (math.ceil(width/ref_width *(width - distance - biggest_line_width)), math.ceil(height/ref_height * position))
+            elif alignments == "center":
+                new_position = (math.ceil(width/ref_width *(width - distance - biggest_line_width/2)), math.ceil(height/ref_height * position))
+        else:
+            if alignments == "left":
+                new_position = (math.ceil(width/ref_width *(width/2 - biggest_line_width/2)), math.ceil(height/ref_height * position))
+            elif alignments == "center":
+                new_position = (math.ceil(width/ref_width *(width/2)), math.ceil(height/ref_height * position))
+    print(alignments[1])
+    return new_position
 
 def get_templates_and_textboxes(template_size, purpose_list, direction):
     # Get the number of textboxes from the length of the purpose list

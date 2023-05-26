@@ -40,6 +40,13 @@ def test_view(request):
         purposes = request.POST.get('purposes').split(',')
         texts = request.POST.get('texts').split(',')
 
+        print(size)
+        print(type(size))
+        print(texts)
+        print(type(texts))
+        print(purposes)
+        print(type(purposes))
+
         makeWebBanner(product, texts, size, purposes)
 
         # Get the list of generated image files
@@ -56,21 +63,40 @@ def request_view(request):
         concept = data['concept']
         include = data['include']
         contents = data['contents']
-        print(concept,include,contents)
-        # 이제 concept, include, contents를 사용하여 필요한 작업을 수행할 수 있습니다.
+        
+        purpose = []
+        texts = []
+        for i in range(len(contents)):
+            texts.append(contents[i]['comment'])    
+            purpose.append(contents[i]['select'])
 
-        img = Image.open("makeStableDiffusion.png")
+        
+
+        image, changed_texts, position, font_size, kerning, alignments = makeWebBanner(concept, texts, include, purpose)
         img_io = io.BytesIO()
-        img.save(img_io, 'PNG')
+        image.save(img_io, 'PNG')
         img_io.seek(0)
 
+        print(changed_texts)
+        print(type(changed_texts))
+        print(position)
+        print(type(position))
 
+        response = FileResponse(img_io, content_type='png')
+        response['texts'] = json.dumps(changed_texts)
+        # response['position'] = json.dumps(position)
+        # response['font_size'] = json.dumps(font_size)
+        # response['kerning'] = json.dumps(kerning)
+        # response['alignments'] = json.dumps(alignments)
+
+        print(response['texts'])
         # 작업이 끝나면, JsonResponse를 사용하여 응답을 보냅니다.
-        return FileResponse(img_io, content_type='png')
+        return response
 
     else:
+        print("bad")
         # POST 요청이 아닌 경우, 에러 메시지를 보냅니다.
-        return JsonResponse({'error': 'Invalid method'}, status=400)
+        return JsonResponse({'error': 'Invalid method'}, status=    400)
 
 
 

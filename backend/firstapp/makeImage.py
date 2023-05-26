@@ -261,9 +261,9 @@ def transparency2(before_image, direction, axis):
     for y in range(height):
         for x in range(width):
             item = image.getpixel((x, y))
-            if direction == "left" :
+            if direction == "right" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * x+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
-            elif direction == "right" :
+            elif direction == "left" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * (width-x)+ (1-factor) * middle_w, middle_w, sigma)/gaussian(middle_w, middle_w, sigma))
             elif direction == "down" :
                 alpha = int(255-(255-min_alpha)*gaussian(factor * y+ (1-factor) * middle_h, middle_h, sigma)/gaussian(middle_h, middle_h, sigma))
