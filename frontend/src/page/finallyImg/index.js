@@ -18,10 +18,16 @@ const LastPage = () => {
         fontFamily: "Arial",
       },
       { text: "AIB Project\n 末!!!", fontSize: 18, fontFamily: "Arial" },
+      {
+        text: "언제 이 프로젝트가\n끝날까...?",
+        fontSize: 20,
+        fontFamily: "Arial",
+      },
     ],
     textPositions: [
       { x: 500, y: 200 },
       { x: 1000, y: 300 },
+      { x: 1, y: 1 },
     ],
   };
 
@@ -31,7 +37,7 @@ const LastPage = () => {
       <ImgWithEditableText
         imageUrl={image.imageUrl_front}
         initialTexts={image.initialTexts}
-        textPositions={image.textPositions}
+        initialTextPositions={image.textPositions}
       />
     </div>
   );

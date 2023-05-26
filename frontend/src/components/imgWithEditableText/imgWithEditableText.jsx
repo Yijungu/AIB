@@ -13,7 +13,7 @@ const fontOptions = [
 export const ImgWithEditableText = ({
   imageUrl,
   initialTexts,
-  textPositions,
+  initialTextPositions,
 }) => {
   const containerRef = useRef(null);
   const systemRef = useRef(null);
@@ -22,35 +22,39 @@ export const ImgWithEditableText = ({
   const [editing, setEditing] = useState(false);
   const [fontFamily, setFontFamily] = useState("Arial");
   const [fontSize, setFontSize] = useState(24);
+  const [dragging, setDragging] = useState(false);
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const [textPositions, setTextPositions] = useState(initialTextPositions);
 
   const handleTextClick = (index) => {
     setEditingIndex(index);
     setEditing(true);
   };
 
-  const handleTextChange = (e, index) => {
-    const newText = e.target.value;
-    setTexts((prevTexts) =>
-      prevTexts.map((text, i) => (i === index ? newText : text))
-    );
-  };
-
   const handleFontChange = (e) => {
     const newFontFamily = e.target.value;
     setTexts((prevTexts) =>
-      prevTexts.map((text, index) =>
-        index === editingIndex ? { ...text, fontFamily: newFontFamily } : text
-      )
+      prevTexts.map((text, index) => {
+        if (index === editingIndex) {
+          return { ...text, fontFamily: newFontFamily };
+        }
+        return text;
+      })
     );
+    setFontFamily(newFontFamily);
   };
 
   const handleFontSizeChange = (e) => {
     const newFontSize = Number(e.target.value);
     setTexts((prevTexts) =>
-      prevTexts.map((text, index) =>
-        index === editingIndex ? { ...text, fontSize: newFontSize } : text
-      )
+      prevTexts.map((text, index) => {
+        if (index === editingIndex) {
+          return { ...text, fontSize: newFontSize };
+        }
+        return text;
+      })
     );
+    setFontSize(newFontSize);
   };
 
   const handleClickOutside = (e) => {
@@ -64,6 +68,13 @@ export const ImgWithEditableText = ({
     }
   };
 
+  const textStyles = textPositions.map((position, index) => ({
+    top: `${position.y}px`,
+    left: `${position.x}px`,
+    fontSize: texts[index]?.fontSize ? `${texts[index].fontSize}px` : "24px",
+    fontFamily: texts[index]?.fontFamily ? texts[index].fontFamily : "Arial",
+  }));
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -71,33 +82,69 @@ export const ImgWithEditableText = ({
     };
   }, []);
 
-  const textStyles = textPositions.map((position, index) => ({
-    top: `${position.y}px`,
-    left: `${position.x}px`,
-    fontSize: texts[index]?.fontSize ? `${texts[index].fontSize}px` : undefined,
-    fontFamily: texts[index]?.fontFamily ? texts[index].fontFamily : undefined,
-  }));
+  const handleMouseDown = (e, index) => {
+    if (editing) return;
+    setDragging(true);
+    setEditingIndex(index);
+    setStartPos({
+      x: e.clientX - textPositions[index].x,
+      y: e.clientY - textPositions[index].y,
+    });
+  };
 
-  const systemStyle = textPositions.map((position) => ({
-    top: `${position.y - 60}px`,
-    left: `${position.x}px`,
-  }));
+  const handleMouseMove = (e) => {
+    if (!dragging || editingIndex === null) return;
+    const newPosition = {
+      x: e.clientX - startPos.x,
+      y: e.clientY - startPos.y,
+    };
+    setTextPositions((prevPositions) =>
+      prevPositions.map((pos, index) =>
+        index === editingIndex ? newPosition : pos
+      )
+    );
+  };
+
+  const handleMouseUp = () => {
+    setDragging(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [dragging, editingIndex, startPos]);
 
   return (
-    <div className="image-with-text" ref={containerRef}>
+    <div
+      style={{ position: "relative", display: "inline-block" }}
+      className="image-with-text"
+      ref={containerRef}
+    >
       <img src={imageUrl} alt="AIB Service and Project Completion" />
       {texts.map((text, index) => (
         <div
           className="text-wrapper"
           style={textStyles[index]}
           onClick={() => handleTextClick(index)}
+          onMouseDown={(e) => handleMouseDown(e, index)}
           key={index}
         >
           {text.text}
         </div>
       ))}
       {editing && (
-        <div className="system" style={systemStyle} ref={systemRef}>
+        <div
+          className="system"
+          style={{
+            top: `${textPositions[editingIndex].y - 60}px`,
+            left: `${textPositions[editingIndex].x}px`,
+          }}
+          ref={systemRef}
+        >
           <div>
             <label>
               Font Family: &nbsp;
