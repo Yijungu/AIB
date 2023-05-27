@@ -5,10 +5,12 @@ import SubmitPage from "../page/main/submitPage";
 import LastPage from "../page/finallyImg";
 import SecondPage from "../page/selectImg";
 import LoginPage from "../page/login";
+import { TopMenu } from "../components/menu/topMenu/topMenu";
 
 const Router = () => {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <TopMenu />
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/submit" element={<SubmitPage />} />

@@ -8,7 +8,6 @@ import { questionData } from "../../../data/QuestionData";
 import { Question } from "../../../components/question/question";
 import { Label } from "../../../components/label/label";
 import { Comment } from "../../../components/comment/comment";
-import { Menu } from "../../../components/menu/menu";
 import { Logo } from "../../../components/logo/logo";
 
 import { MyContext } from "../../../App";
@@ -95,7 +94,6 @@ const SubmitPage = (props) => {
 
   return (
     <>
-      <Menu />
       <Logo />
       <div id="container-First">
         <div id="form-question">

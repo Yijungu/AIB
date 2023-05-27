@@ -1,44 +1,36 @@
-import React, { useContext } from "react";
-import { ImgWithEditableText } from "../../components/imgWithEditableText/imgWithEditableText";
-import { MyContext } from "../../App"; // 경로는 알맞게 수정해주세요
+import React, { useState } from "react";
 import "./index.css";
-import { Logo } from "../../components/logo/logo";
 
 const LastPage = () => {
-  const { imageUrl, texts, position, fontSize, kerning, alignments } =
-    useContext(MyContext);
-  console.log(imageUrl);
-  const imgTest = "./testImgJpeg.jpeg";
-  const image = {
-    imageUrl_front: imgTest,
-    initialTexts: [
-      {
-        text: "AIB는\n 아이브라고 읽어!!@#1234",
-        fontSize: 24,
-        fontFamily: "Arial",
-      },
-      { text: "AIB Project\n 末!!!", fontSize: 18, fontFamily: "Arial" },
-      {
-        text: "언제 이 프로젝트가\n끝날까...?",
-        fontSize: 20,
-        fontFamily: "Arial",
-      },
-    ],
-    textPositions: [
-      { x: 500, y: 200 },
-      { x: 1000, y: 300 },
-      { x: 1, y: 1 },
-    ],
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleImageClick = () => {
+    if (!isSidebarOpen) {
+      setIsSidebarOpen(true);
+    }
   };
 
   return (
-    <div id="imgEdit">
-      <Logo />
-      <ImgWithEditableText
-        imageUrl={image.imageUrl_front}
-        initialTexts={image.initialTexts}
-        initialTextPositions={image.textPositions}
-      />
+    <div id="last-page">
+      <div
+        className={`image-container ${isSidebarOpen ? "shift-right" : ""}`}
+        onClick={handleImageClick}
+      >
+        <img src="./image.jpeg" className="image" alt="Main Image" />
+      </div>
+      <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+        <button className="close-btn" onClick={toggleSidebar}>
+          Close Sidebar
+        </button>
+        <div className="content">
+          <h2>Sidebar Content</h2>
+          <p>This is the content of the sidebar.</p>
+        </div>
+      </div>
     </div>
   );
 };
