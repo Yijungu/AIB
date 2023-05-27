@@ -45,7 +45,7 @@ const SubmitPage = (props) => {
       [name]: value,
     }));
   };
-
+  
   const onContentsChange = (newComments, newSelects) => {
     const newContent = { select: newSelects, comment: newComments };
     setContents((prevState) => [...prevState, newContent]);

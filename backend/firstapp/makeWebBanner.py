@@ -6,7 +6,7 @@ from .makeGPT import *
 from .makeImage import *
 from .makeTemplate import *
 
-openai.api_key = "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"
+openai.api_key = ""
 gptModel = 'text-davinci-003'
 
 def makeWebBanner(product, texts, size, purposes):

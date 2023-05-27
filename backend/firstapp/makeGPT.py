@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "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"
+openai.api_key = ""
 gptModel = 'text-davinci-003'
 
 
