@@ -9,6 +9,9 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
 
     # Parsing width and height from size
     width, height = map(int, size.split(':'))
+    
+    # Font settings
+    font_path = 'Hancom_Gothic_Bold.ttf'
 
     # Calling the function to get templates and textboxes
     textboxes_for_templates, valid_template_ids, closest_size = get_templates_and_textboxes(size, required_purposes, direction)
@@ -31,24 +34,30 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
         for textbox in textboxes:
             font_size = resize_font(height,textbox.font_size, closest_size)
             kerning = 2.9696 - 1.5565 *np.log(font_size)
-            position = set_position(width, height, texts, font_size, kerning, textbox.width_sort, textbox.position, closest_size, direction)
-            positions.append(position)
             font_sizes.append(font_size)
             alignments.append(textbox.width_sort)
             kernings.append(kerning)
 
+        biggest_line_width = 0
+
+        for i in range(len(texts)):
+            font = ImageFont.truetype(font_path, font_sizes[i])
+            lines = texts[i].split('n')
+            for line in lines:
+                biggest_line_width = sum(font.getsize(char)[0] + kernings[i] for char in line) if sum(font.getsize(char)[0] + kernings[i] for char in line) > biggest_line_width else biggest_line_width 
+
+        for textbox in textboxes:
+            position = set_position(width, height, textbox.width_sort, textbox.position, closest_size, direction, biggest_line_width)
+            positions.append(position)
+
         image = before_img
         draw  = ImageDraw.Draw(image)
 
-        # Font settings
-        font_path = 'Hancom_Gothic_Bold.ttf'
-        print(font_sizes)
         # Text drawing
         for i in range(len(texts)):
             font = ImageFont.truetype(font_path, font_sizes[i])
             (x, y) = positions[i]
             alignment = alignments[i]
-            print(alignment)
             lines = texts[i].split('n')
             for line in lines:
                 x_start = x
@@ -91,10 +100,10 @@ def resize_font(height, fontsize, size_ratio):
 
     return fontsize
 
-def set_position(width, height, texts, font_sizes, kerning, alignments, position, size_ratio, direction):
+def set_position(width, height, alignments, position, size_ratio, direction, biggest_line_width):
 
     font_path = 'Hancom_Gothic_Bold.ttf'
-    distance = 100
+    distance = 50
     new_position = (0,0)
 
     if size_ratio == "1200:360":
@@ -113,13 +122,6 @@ def set_position(width, height, texts, font_sizes, kerning, alignments, position
             new_position = (math.ceil(width/ref_width *distance), math.ceil(height/ref_height * position))
     else:
          
-        biggest_line_width = 0
-
-        for i in range(len(texts)):
-            font = ImageFont.truetype(font_path, font_sizes[i])
-            lines = texts[i].split('\n')
-            for line in lines:
-                biggest_line_width = sum(font.getsize(char)[0] + kerning for char in line) if sum(font.getsize(char)[0] + kerning for char in line) > biggest_line_width else biggest_line_width 
         if direction == 'right':
             if alignments == "left":
                 new_position = (math.ceil(width/ref_width *(width - distance - biggest_line_width)), math.ceil(height/ref_height * position))
@@ -130,7 +132,7 @@ def set_position(width, height, texts, font_sizes, kerning, alignments, position
                 new_position = (math.ceil(width/ref_width *(width/2 - biggest_line_width/2)), math.ceil(height/ref_height * position))
             elif alignments == "center":
                 new_position = (math.ceil(width/ref_width *(width/2)), math.ceil(height/ref_height * position))
-    print(alignments[1])
+    
     return new_position
 
 def get_templates_and_textboxes(template_size, purpose_list, direction):

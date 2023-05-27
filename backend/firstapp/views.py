@@ -40,13 +40,6 @@ def test_view(request):
         purposes = request.POST.get('purposes').split(',')
         texts = request.POST.get('texts').split(',')
 
-        print(size)
-        print(type(size))
-        print(texts)
-        print(type(texts))
-        print(purposes)
-        print(type(purposes))
-
         makeWebBanner(product, texts, size, purposes)
 
         # Get the list of generated image files
