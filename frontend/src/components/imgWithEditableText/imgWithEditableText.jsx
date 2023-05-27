@@ -119,56 +119,63 @@ export const ImgWithEditableText = ({
   }, [dragging, editingIndex, startPos]);
 
   return (
-    <div
-      style={{ position: "relative", display: "inline-block" }}
-      className="image-with-text"
-      ref={containerRef}
-    >
-      <img src={imageUrl} alt="AIB Service and Project Completion" />
-      {texts.map((text, index) => (
-        <div
-          className="text-wrapper"
-          style={textStyles[index]}
-          onClick={() => handleTextClick(index)}
-          onMouseDown={(e) => handleMouseDown(e, index)}
-          key={index}
-        >
-          {text.text}
-        </div>
-      ))}
-      {editing && (
-        <div
-          className="system"
-          style={{
-            top: `${textPositions[editingIndex].y - 60}px`,
-            left: `${textPositions[editingIndex].x}px`,
-          }}
-          ref={systemRef}
-        >
-          <div>
-            <label>
-              Font Family: &nbsp;
-              <select value={fontFamily} onChange={handleFontChange}>
-                {fontOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+    <>
+      <div
+        style={{ position: "relative", display: "inline-block" }}
+        className="image-with-text"
+        ref={containerRef}
+      >
+        <img src={imageUrl} alt="AIB Service and Project Completion" />
+        {texts.map((text, index) => (
+          <div
+            className="text-wrapper"
+            style={textStyles[index]}
+            onClick={() => handleTextClick(index)}
+            onMouseDown={(e) => handleMouseDown(e, index)}
+            key={index}
+          >
+            {text.text}
           </div>
-          <div>
-            <label>
-              Font Size: &nbsp;
-              <input
-                type="number"
-                value={fontSize}
-                onChange={handleFontSizeChange}
-              />
-            </label>
+        ))}
+        {editing && (
+          <div
+            className="system"
+            style={{
+              top: `${textPositions[editingIndex].y - 60}px`,
+              left: `${textPositions[editingIndex].x}px`,
+            }}
+            ref={systemRef}
+          >
+            <div>
+              <label>
+                Font Family: &nbsp;
+                <select value={fontFamily} onChange={handleFontChange}>
+                  {fontOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div>
+              <label>
+                Font Size: &nbsp;
+                <input
+                  type="number"
+                  value={fontSize}
+                  onChange={handleFontSizeChange}
+                />
+              </label>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+      <button>
+        <a href={imageUrl} download>
+          download
+        </a>
+      </button>
+    </>
   );
 };
