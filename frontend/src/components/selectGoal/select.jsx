@@ -26,16 +26,16 @@ export const Select = (props) => {
       <option key="nullKey" value="null">
         - 선택 -
       </option>
-      <option key="test1" value="big_comment">
-        큰 홍보 문구
+      <option key="test1" value="큰 홍보문구">
+        큰 홍보문구
       </option>
-      <option key="test2" value="small_comment">
-        작은 홍보 문구
+      <option key="test2" value="작은 홍보문구">
+        작은 홍보문구
       </option>
-      <option key="test3" value="time_space">
+      <option key="test3" value="시간&장소">
         시간&장소
       </option>
-      <option key="test3" value="description">
+      <option key="test3" value="상세 설명">
         상세 설명
       </option>
       <IconSVG

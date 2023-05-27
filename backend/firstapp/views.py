@@ -70,19 +70,8 @@ def request_view(request):
         image.save(img_io, 'PNG')
         img_io.seek(0)
 
-        print(changed_texts)
-        print(type(changed_texts))
-        print(position)
-        print(type(position))
-
         response = FileResponse(img_io, content_type='png')
-        response['texts'] = json.dumps(changed_texts)
-        # response['position'] = json.dumps(position)
-        # response['font_size'] = json.dumps(font_size)
-        # response['kerning'] = json.dumps(kerning)
-        # response['alignments'] = json.dumps(alignments)
 
-        print(response['texts'])
         # 작업이 끝나면, JsonResponse를 사용하여 응답을 보냅니다.
         return response
 

@@ -6,6 +6,9 @@ from .makeGPT import *
 from collections import Counter
 from PIL import Image, ImageDraw, ImageFont
 
+# Font settings
+font_path = 'Hancom_Gothic_Bold.ttf'
+
 def textOnImage(before_img, texts, size, required_purposes, direction):
 
     # Parsing width and height from size
@@ -32,7 +35,10 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
         line_breaked_texts = []
 
         for text, textbox in zip(texts, textboxes):
-            line_breaked_texts.append(line_breaker(text, textbox.line_break))
+            if textbox.line_break == 0 :
+                line_breaked_texts.append(text)
+            else :
+                line_breaked_texts.append(line_breaker(text, textbox.line_break))
             font_size = resize_font(height,textbox.font_size, closest_size)
             kerning = 2.9696 - 1.5565 *np.log(font_size)
             font_sizes.append(font_size)
@@ -41,22 +47,19 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
 
         biggest_line_width = 0
 
-        for i in range(line_breaked_texts):
+        for i in range(len(line_breaked_texts)):
             font = ImageFont.truetype(font_path, font_sizes[i])
             lines = texts[i].split('\n')
             for line in lines:
                 biggest_line_width = sum(font.getsize(char)[0] + kernings[i] for char in line) if sum(font.getsize(char)[0] + kernings[i] for char in line) > biggest_line_width else biggest_line_width 
 
-        for textbox in range(len(textboxes)):
-            position = set_position(width, height, textbox.width_sort, textbox.position, closest_size, direction, )
+        for textbox in textboxes:
+            position = set_position(width, height, textbox.width_sort, textbox.position, closest_size, direction, biggest_line_width)
             positions.append(position)
 
         image = before_img
         draw  = ImageDraw.Draw(image)
 
-        # Font settings
-        font_path = 'Hancom_Gothic_Bold.ttf'
-        print(font_sizes)
         # Text drawing
         for i in range(len(line_breaked_texts)):
             font = ImageFont.truetype(font_path, font_sizes[i])

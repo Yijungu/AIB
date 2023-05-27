@@ -3,7 +3,7 @@ import "./index.css";
 import { TopMenu } from "../../components/menu/topMenu/topMenu";
 
 const LastPage = () => {
-  const imageUrl = "./image.jpeg";
+  const [imageUrl, setImageUrl] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
