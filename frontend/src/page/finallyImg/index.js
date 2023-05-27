@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./index.css";
 import { TopMenu } from "../../components/menu/topMenu/topMenu";
+import { MyContext } from "../../App";
 
 const LastPage = () => {
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState(MyContext);
+  console.log(imageUrl)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
