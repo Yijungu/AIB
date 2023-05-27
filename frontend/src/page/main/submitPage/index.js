@@ -71,22 +71,27 @@ const SubmitPage = (props) => {
         { responseType: "blob" }
       );
 
-      const imgBlob = await response.data;
-      const texts = JSON.parse(response.headers.get("texts"));
-      const position = JSON.parse(response.headers.get("position"));
-      const font_size = JSON.parse(response.headers.get("font_size"));
-      const kerning = JSON.parse(response.headers.get("kerning"));
-      const alignments = JSON.parse(response.headers.get("alignments"));
 
-      const imgURL = URL.createObjectURL(imgBlob);
-      setImageUrl(imgURL);
-      setTexts(texts);
-      setPosition(position);
-      setFontSize(font_size);
-      setKerning(kerning);
-      setAlignments(alignments);
-
+      const imageUrl = URL.createObjectURL(response.data);
+      console.log(imageUrl);
+      setImageUrl(imageUrl); // 이미지 URL을 상위 컴포넌트에 전달
       navigate("/last");
+      
+      // const imgBlob = await response.data;
+      // const texts = JSON.parse(response.headers.get("texts"));
+      // const position = JSON.parse(response.headers.get("position"));
+      // const font_size = JSON.parse(response.headers.get("font_size"));
+      // const kerning = JSON.parse(response.headers.get("kerning"));
+      // const alignments = JSON.parse(response.headers.get("alignments"));
+
+      // const imgURL = URL.createObjectURL(imgBlob);
+      
+      // setImageUrl(imgURL);
+      // setTexts(texts);
+      // setPosition(position);
+      // setFontSize(font_size);
+      // setKerning(kerning);
+      // setAlignments(alignments);
     } catch (error) {
       console.log(error);
     }
