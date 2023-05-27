@@ -1,23 +1,32 @@
+import torch
+import openai
+
+from transformers import pipeline
+from .makeGPT import *
 from .makeImage import *
 from .makeTemplate import *
 
+openai.api_key = "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"
+gptModel = 'text-davinci-003'
+
 def makeWebBanner(product, texts, size, purposes):
     # purposes = replace_elements(purposes)
-    texts, purposes = ordered(texts, purposes)
-    width, height = map(int, size.split(':'))
+    #texts, purposes = ordered(texts, purposes)
+    #width, height = map(int, size.split(':'))
     #webBannerImage = makeStableDiffusion(product, width, height)
-    webBannerImage = Image.open("makeStableDiffusion.png")
-    axis = calculate_axis(width, height)
-    direction = detect(webBannerImage, axis) if axis != 'square' else detect_square(webBannerImage)
+    #webBannerImage = Image.open("makeStableDiffusion.png")
+    #axis = calculate_axis(width, height)
+    #direction = detect(webBannerImage, axis) if axis != 'square' else detect_square(webBannerImage)
     # direction의 값은 left(up) center right(down) 중 하나
-    webBannerImage = transparency2(webBannerImage, direction, axis)
-    webBannerImage = add_white_background(webBannerImage)
+    #webBannerImage = transparency2(webBannerImage, direction, axis)
+    #webBannerImage = add_white_background(webBannerImage)
     
     # direction = 'right'
-    image, changed_texts, position, fontsize, kerning, alignments = textOnImage(webBannerImage, texts, size, purposes, direction)
-    image.save("webBannerImage최종.png")
+    #image, changed_texts, position, fontsize, kerning, alignments = textOnImage(webBannerImage, texts, size, purposes, direction)
+    #image.save("webBannerImage최종.png")
     # direction = 'right'
-    return image, changed_texts, position, fontsize, kerning, alignments
+    # return image, changed_texts, position, fontsize, kerning, alignments
+    print(line_breaker(texts, 2))
 
 def calculate_axis(width, height):
     # Split the input size into width and height and calculate the ratio

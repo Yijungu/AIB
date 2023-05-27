@@ -18,7 +18,7 @@ RUN pip install tensorflow
 RUN pip install tensorflow-hub
 RUN pip install scipy
 RUN pip install mysqlclient
-
+RUN pip install "accelerate>=0.16.0,<1" "transformers[torch]>=4.28.1,<5" "torch>=1.13.1,<2"
 RUN apt-get update
 RUN apt-get -y install libgl1-mesa-glx
 
