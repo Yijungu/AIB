@@ -5,9 +5,14 @@ import imageUrl from "../../../page/finallyImg/index";
 
 export const TopMenu = () => {
   const handleDownloadImage = () => {
+    const imageSrc = "./image.jpeg"; // 이미지 파일 경로
+
+    // 가상의 다운로드 링크 생성
     const downloadLink = document.createElement("a");
-    downloadLink.href = imageUrl;
-    downloadLink.download = "image.jpg";
+    downloadLink.href = imageSrc;
+    downloadLink.download = "image.jpg"; // 다운로드될 파일명 설정
+
+    // 클릭 이벤트를 발생시켜 파일 다운로드 진행
     downloadLink.click();
   };
 
