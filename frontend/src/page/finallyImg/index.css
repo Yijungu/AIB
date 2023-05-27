@@ -1,8 +1,12 @@
+body {
+    background-color: #EEF5FF;
+}
 #last-page {
     position: relative;
   }
   
   .image-container {
+    margin-top: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
