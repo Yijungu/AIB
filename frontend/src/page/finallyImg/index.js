@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./index.css";
 import { TopMenu } from "../../components/menu/topMenu/topMenu";
 import { MyContext } from "../../App";
 
 const LastPage = () => {
-  const [imageUrl, setImageUrl] = useState(MyContext);
+  const { imageUrl } = useContext(MyContext);
   console.log(imageUrl)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

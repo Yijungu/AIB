@@ -65,7 +65,6 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
             font = ImageFont.truetype(font_path, font_sizes[i])
             (x, y) = positions[i]
             alignment = alignments[i]
-            print(alignment)
             lines = line_breaked_texts[i].split('n')
             for line in lines:
                 x_start = x

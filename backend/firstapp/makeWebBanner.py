@@ -1,13 +1,9 @@
 import torch
-import openai
 
 from transformers import pipeline
 from .makeGPT import *
 from .makeImage import *
 from .makeTemplate import *
-
-openai.api_key = ""
-gptModel = 'text-davinci-003'
 
 def makeWebBanner(product, texts, size, purposes):
     texts, purposes = ordered(texts, purposes)
