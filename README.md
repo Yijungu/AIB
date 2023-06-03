@@ -34,15 +34,22 @@ AIB는 졸업 프로젝트입니다.
    ```shell
    npm install
    ```
+3. docker 설치
 
 ## 사용법
 
 1. 웹 실행
 
    ```shell
-   npm start
+   docker compose -up
 
-   ```
+ - 데이터베이스 관리
+   ```shell
+   docker-compose exec backend python manage.py makemigrations firstapp
+   
+   docker-compose exec backend python manage.py migrate firstapp
+   
+   docker-compose exec backend python manage.py insert_data
 
 2. 웹 브라우저에서 애플리케이션을 엽니다.
    `http://localhost:3000/`을 방문하여 애플리케이션에 접속합니다.
