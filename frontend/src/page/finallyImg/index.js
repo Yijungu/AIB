@@ -1,11 +1,34 @@
 import React, { useState, useContext } from "react";
 import "./index.css";
 import { TopMenu } from "../../components/menu/topMenu/topMenu";
+import { ImgWithEditableText } from "../../components/imgWithEditableText/imgWithEditableText";
 import { MyContext } from "../../App";
 
 const LastPage = () => {
   const { imageUrl } = useContext(MyContext);
-  console.log(imageUrl)
+  const imgTest = "./testImgJpeg.jpeg";
+  const image = {
+    imageUrl_front: imgTest,
+    initialTexts: [
+      {
+        text: "AIB는\n 아이브라고 읽어!!@#1234",
+        fontSize: 24,
+        fontFamily: "Arial",
+      },
+      { text: "AIB Project\n 末!!!", fontSize: 18, fontFamily: "Arial" },
+      {
+        text: "언제 이 프로젝트가\n끝날까...?",
+        fontSize: 20,
+        fontFamily: "Arial",
+      },
+    ],
+    textPositions: [
+      { x: 500, y: 200 },
+      { x: 1000, y: 300 },
+      { x: 1, y: 1 },
+    ],
+  };
+  console.log(imageUrl);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -18,16 +41,15 @@ const LastPage = () => {
 
   return (
     <>
-      <TopMenu imageUrl={imageUrl} /> {/* imageUrl을 TopMenu로 전달 */}
+      <TopMenu imageUrl={"./testImgJpeg.jpeg"} />
       <div id="last-page">
         <div
           className={`image-container ${isSidebarOpen ? "shift-right" : ""}`}
         >
-          <img
-            src={imageUrl}
-            className="image"
-            alt="Main Image"
-            onClick={handleImageClick}
+          <ImgWithEditableText
+            imageUrl={image.imageUrl_front}
+            initialTexts={image.initialTexts}
+            initialTextPositions={image.textPositions}
           />
         </div>
         {isSidebarOpen && (

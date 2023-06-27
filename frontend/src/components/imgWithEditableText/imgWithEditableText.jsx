@@ -171,11 +171,6 @@ export const ImgWithEditableText = ({
           </div>
         )}
       </div>
-      <button>
-        <a href={imageUrl} download>
-          download
-        </a>
-      </button>
     </>
   );
 };
