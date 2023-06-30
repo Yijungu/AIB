@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
-import { TopMenu } from "../../components/menu/topMenu/topMenu";
-import { Sidebar } from "../../components/menu/sideMenu/sideBar";
-import { ImgWithEditableText } from "../../components/imgWithEditableText/imgWithEditableText";
+import { TopMenu } from "../../components/layouts/topMenu";
+import { Sidebar } from "../../components/layouts/sideMenu";
+import { ImgWithEditableText } from "../../components/imgWithEditableText";
 
 const LastPage = () => {
   const imgTest = "./testImgJpeg.jpeg";
