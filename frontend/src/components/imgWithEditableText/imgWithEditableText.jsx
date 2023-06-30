@@ -14,6 +14,7 @@ export const ImgWithEditableText = ({
   imageUrl,
   initialTexts,
   initialTextPositions,
+  onClick,
 }) => {
   const containerRef = useRef(null);
   const systemRef = useRef(null);
@@ -25,6 +26,10 @@ export const ImgWithEditableText = ({
   const [dragging, setDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [textPositions, setTextPositions] = useState(initialTextPositions);
+
+  const handleOnClick = () => {
+    onClick(); // 사이드바 열기
+  };
 
   const handleTextClick = (index) => {
     setEditingIndex(index);
@@ -119,13 +124,17 @@ export const ImgWithEditableText = ({
   }, [dragging, editingIndex, startPos]);
 
   return (
-    <>
+    <form>
       <div
         style={{ position: "relative", display: "inline-block" }}
         className="image-with-text"
         ref={containerRef}
       >
-        <img src={imageUrl} alt="AIB Service and Project Completion" />
+        <img
+          src={imageUrl}
+          alt="AIB Service and Project Completion"
+          onClick={handleOnClick}
+        />
         {texts.map((text, index) => (
           <div
             className="text-wrapper"
@@ -171,6 +180,6 @@ export const ImgWithEditableText = ({
           </div>
         )}
       </div>
-    </>
+    </form>
   );
 };

@@ -1,11 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import { TopMenu } from "../../components/menu/topMenu/topMenu";
+import { Sidebar } from "../../components/menu/sideMenu/sideBar";
 import { ImgWithEditableText } from "../../components/imgWithEditableText/imgWithEditableText";
-import { MyContext } from "../../App";
 
 const LastPage = () => {
-  const { imageUrl } = useContext(MyContext);
   const imgTest = "./testImgJpeg.jpeg";
   const image = {
     imageUrl_front: imgTest,
@@ -28,8 +27,9 @@ const LastPage = () => {
       { x: 1, y: 1 },
     ],
   };
-  console.log(imageUrl);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [imageSize, setImageSize] = useState({ width: "100%", height: "100%" });
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -39,30 +39,54 @@ const LastPage = () => {
     setIsSidebarOpen(true);
   };
 
+  const handleTextChange = (index, newText) => {
+    const updatedTexts = [...image.initialTexts];
+    updatedTexts[index].text = newText;
+
+    setImageSize({ ...imageSize, initialTexts: updatedTexts });
+  };
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      setImageSize({
+        width: "calc(100% - 200px)",
+        height: "calc(100% - 16px)",
+      });
+    } else {
+      setImageSize({ width: "100%", height: "100%" });
+    }
+  }, [isSidebarOpen]);
+
   return (
     <>
       <TopMenu imageUrl={"./testImgJpeg.jpeg"} />
       <div id="last-page">
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+          {image.initialTexts.map((text, index) => (
+            <div key={index}>
+              <input
+                type="text"
+                value={text.text}
+                onChange={(e) => handleTextChange(index, e.target.value)}
+              />
+            </div>
+          ))}
+        </Sidebar>
         <div
           className={`image-container ${isSidebarOpen ? "shift-right" : ""}`}
+          style={{
+            transform: isSidebarOpen ? "translateX(200px)" : "none",
+            transition: "transform 0.3s ease-in-out",
+          }}
         >
           <ImgWithEditableText
             imageUrl={image.imageUrl_front}
             initialTexts={image.initialTexts}
             initialTextPositions={image.textPositions}
+            style={imageSize}
+            onClick={handleImageClick}
           />
         </div>
-        {isSidebarOpen && (
-          <div className="sidebar">
-            <button className="close-btn" onClick={toggleSidebar}>
-              Close Sidebar
-            </button>
-            <div className="content">
-              <h2>Sidebar Content</h2>
-              <p>This is the content of the sidebar.</p>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
