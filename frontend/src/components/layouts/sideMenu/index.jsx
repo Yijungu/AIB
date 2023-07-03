@@ -1,5 +1,5 @@
 import React from "react";
-import "./sideBar.css";
+import "./index.css";
 
 export const Sidebar = ({ isOpen, toggleSidebar, children }) => {
   const handleClose = () => {

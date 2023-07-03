@@ -1,13 +1,13 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import "./topMenu.css";
+import "./index.css";
 import { MyContext } from "../../../App";
 import imageUrl from "../../../page/finallyImg/index";
 
 export const TopMenu = () => {
   const { imageUrl } = useContext(MyContext);
   const handleDownloadImage = () => {
-    const imageSrc = imageUrl // 이미지 파일 경로
+    const imageSrc = imageUrl; // 이미지 파일 경로
 
     // 가상의 다운로드 링크 생성
     const downloadLink = document.createElement("a");

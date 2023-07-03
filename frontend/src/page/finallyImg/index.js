@@ -36,21 +36,14 @@ const LastPage = () => {
   };
 
   const handleImageClick = () => {
-    setIsSidebarOpen(true);
-  };
-
-  const handleTextChange = (index, newText) => {
-    const updatedTexts = [...image.initialTexts];
-    updatedTexts[index].text = newText;
-
-    setImageSize({ ...imageSize, initialTexts: updatedTexts });
+    setIsSidebarOpen(isSidebarOpen ? false : true);
   };
 
   useEffect(() => {
     if (isSidebarOpen) {
       setImageSize({
-        width: "calc(100% - 200px)",
-        height: "calc(100% - 16px)",
+        width: "calc(100% - 250px)",
+        height: "100%",
       });
     } else {
       setImageSize({ width: "100%", height: "100%" });
@@ -59,24 +52,18 @@ const LastPage = () => {
 
   return (
     <>
-      <TopMenu imageUrl={"./testImgJpeg.jpeg"} />
+      <TopMenu imageUrl={imgTest} />
       <div id="last-page">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-          {image.initialTexts.map((text, index) => (
-            <div key={index}>
-              <input
-                type="text"
-                value={text.text}
-                onChange={(e) => handleTextChange(index, e.target.value)}
-              />
-            </div>
-          ))}
+          <h2>Sidebar Content</h2>
+          <p>This is the content of the sidebar.</p>
         </Sidebar>
         <div
           className={`image-container ${isSidebarOpen ? "shift-right" : ""}`}
           style={{
-            transform: isSidebarOpen ? "translateX(200px)" : "none",
+            transform: isSidebarOpen ? "translateX(250px)" : "none",
             transition: "transform 0.3s ease-in-out",
+            width: imageSize.width,
           }}
         >
           <ImgWithEditableText

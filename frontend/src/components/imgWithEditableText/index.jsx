@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./imgWithEditableText.css";
+import "./index.css";
 
 const fontOptions = [
   { value: "Arial", label: "Arial" },
