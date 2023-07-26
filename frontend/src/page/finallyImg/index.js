@@ -50,6 +50,8 @@ const LastPage = () => {
     }
   }, [isSidebarOpen]);
 
+  const contentClass = isSidebarOpen ? "content shrink" : "content";
+
   return (
     <>
       <TopMenu imageUrl={imgTest} />
@@ -61,8 +63,7 @@ const LastPage = () => {
         <div
           className={`image-container ${isSidebarOpen ? "shift-right" : ""}`}
           style={{
-            transform: isSidebarOpen ? "translateX(250px)" : "none",
-            transition: "transform 0.3s ease-in-out",
+            transform: isSidebarOpen ? "translateX(300px)" : "none",
             width: imageSize.width,
           }}
         >

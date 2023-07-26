@@ -14,6 +14,7 @@ export const ImgWithEditableText = ({
   imageUrl,
   initialTexts,
   initialTextPositions,
+  style,
   onClick,
 }) => {
   const containerRef = useRef(null);
@@ -126,15 +127,22 @@ export const ImgWithEditableText = ({
   return (
     <form>
       <div
-        style={{ position: "relative", display: "inline-block" }}
+        style={{
+          position: "relative",
+          display: "inline-block",
+          width: style.width,
+          height: style.height,
+        }}
         className="image-with-text"
         ref={containerRef}
       >
-        <img
-          src={imageUrl}
-          alt="AIB Service and Project Completion"
-          onClick={handleOnClick}
-        />
+        <div>
+          <img
+            src={imageUrl}
+            alt="AIB Service and Project Completion"
+            onClick={handleOnClick}
+          />
+        </div>
         {texts.map((text, index) => (
           <div
             className="text-wrapper"

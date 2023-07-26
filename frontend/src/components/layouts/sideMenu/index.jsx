@@ -8,9 +8,6 @@ export const Sidebar = ({ isOpen, toggleSidebar, children }) => {
 
   return (
     <div className={`sidebar ${isOpen ? "open" : ""}`}>
-      <button className="toggle-btn" onClick={handleClose}>
-        {isOpen ? "Close" : "Open"}
-      </button>
       <div className="content">
         <h2>Sidebar Content</h2>
         <p>This is the content of the sidebar.</p>
