@@ -15,7 +15,6 @@ export const ImgWithEditableText = ({
   initialTexts,
   initialTextPositions,
   style,
-  onClick,
 }) => {
   const containerRef = useRef(null);
   const systemRef = useRef(null);
@@ -27,10 +26,6 @@ export const ImgWithEditableText = ({
   const [dragging, setDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [textPositions, setTextPositions] = useState(initialTextPositions);
-
-  const handleOnClick = () => {
-    onClick(); // 사이드바 열기
-  };
 
   const handleTextClick = (index) => {
     setEditingIndex(index);
@@ -140,20 +135,19 @@ export const ImgWithEditableText = ({
           <img
             src={imageUrl}
             alt="AIB Service and Project Completion"
-            onClick={handleOnClick}
           />
-        </div>
         {texts.map((text, index) => (
           <div
-            className="text-wrapper"
-            style={textStyles[index]}
-            onClick={() => handleTextClick(index)}
-            onMouseDown={(e) => handleMouseDown(e, index)}
-            key={index}
+          className="text-wrapper"
+          style={textStyles[index]}
+          onClick={() => handleTextClick(index)}
+          onMouseDown={(e) => handleMouseDown(e, index)}
+          key={index}
           >
             {text.text}
           </div>
         ))}
+        </div>
         {editing && (
           <div
             className="system"

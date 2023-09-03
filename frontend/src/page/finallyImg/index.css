@@ -2,26 +2,16 @@ body {
   background-color: #eef5ff;
 }
 
-#last-page {
-  position: relative;
-}
-
 .image-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  padding-top: 20px;
+  padding-top: 200px;
 }
 
 .sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
   width: 250px;
   height: 100vh;
   background-color: #f0f0f0;
-  z-index: 2;
   padding: 20px;
-  overflow: auto;
 }

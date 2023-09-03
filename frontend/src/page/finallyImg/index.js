@@ -28,42 +28,18 @@ const LastPage = () => {
     ],
   };
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [imageSize, setImageSize] = useState({ width: "100%", height: "100%" });
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleImageClick = () => {
-    setIsSidebarOpen(isSidebarOpen ? false : true);
-  };
-
-  useEffect(() => {
-    if (isSidebarOpen) {
-      setImageSize({
-        width: "calc(100% - 250px)",
-        height: "100%",
-      });
-    } else {
-      setImageSize({ width: "100%", height: "100%" });
-    }
-  }, [isSidebarOpen]);
-
-  const contentClass = isSidebarOpen ? "content shrink" : "content";
 
   return (
     <>
       <TopMenu imageUrl={imgTest} />
       <div id="last-page">
-        <Sidebar isOpen={isSidebarOpen}>
-          <h2>Sidebar Content</h2>
-          <p>This is the content of the sidebar.</p>
-        </Sidebar>
+        <Sidebar isOpen={isSidebarOpen} />
         <div
-          className={`image-container ${isSidebarOpen ? "shift-right" : ""}`}
+          className="image-container"
           style={{
-            transform: isSidebarOpen ? "translateX(300px)" : "none",
+            paddingLeft: "300px",
             width: imageSize.width,
           }}
         >
@@ -72,7 +48,6 @@ const LastPage = () => {
             initialTexts={image.initialTexts}
             initialTextPositions={image.textPositions}
             style={imageSize}
-            onClick={handleImageClick}
           />
         </div>
       </div>

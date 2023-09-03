@@ -9,8 +9,9 @@ export const Sidebar = ({ isOpen, toggleSidebar, children }) => {
   return (
     <div className={`sidebar ${isOpen ? "open" : ""}`}>
       <div className="content">
-        <h2>Sidebar Content</h2>
-        <p>This is the content of the sidebar.</p>
+        <h2>색상</h2>
+        <p>1. 검정</p>
+        <p>2. 빨강</p>
       </div>
     </div>
   );

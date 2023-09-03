@@ -1,5 +1,9 @@
 nav {
-  background-color: #ffffff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #1c1e53;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -16,31 +20,36 @@ ul {
 }
 
 li {
-  margin-right: 20px;
+  margin-right: 40px;
 }
 
 #aib-logo {
+  padding-left: 20px;
   font-family: "Inter";
   font-weight: bold;
   font-size: 32px;
   text-align: center;
-  color: #ABABFF;
-  text-decoration: none;
-  margin-right: auto;
-}
-
-#aib-logo:hover {
-  text-decoration: underline;
-}
-
-.download-btn {
-  padding: 8px 16px;
-  background-color: #4caf50;
   color: #ffffff;
-  border: none;
-  cursor: pointer;
+  text-decoration: none;
 }
 
-.download-btn:hover {
-  background-color: #45a049;
+
+.service-button {
+  font-family: "Inter";
+  font-weight: bold;
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+#login-button{
+  font-family: "Inter";
+  font-weight: bold;
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+#aib-logo:hover, .service-button:hover, #login-button:hover {
+  text-decoration: underline;
 }

@@ -1,35 +1,57 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
-import { MyContext } from "../../../App";
-import imageUrl from "../../../page/finallyImg/index";
 
 export const TopMenu = () => {
-  const { imageUrl } = useContext(MyContext);
-  const handleDownloadImage = () => {
-    const imageSrc = imageUrl; // 이미지 파일 경로
-
-    // 가상의 다운로드 링크 생성
-    const downloadLink = document.createElement("a");
-    downloadLink.href = imageSrc;
-    downloadLink.download = "image.jpg"; // 다운로드될 파일명 설정
-
-    // 클릭 이벤트를 발생시켜 파일 다운로드 진행
-    downloadLink.click();
-  };
+  const [isLogin, setIsLogin] = useState(false);
+  let loginText = "로그인";
+  useEffect(() => {
+    if (!isLogin) {
+      loginText = "로그인";
+    } else {
+      loginText = "로그아웃";
+    }
+  })
 
   return (
     <nav>
-      <ul>
+      <ul id="logo">
         <li id="text-box">
           <Link id="aib-logo" to="/">
             AIB
+            <span style={{ fontSize: "16px", fontWeight: "normal" }}>
+              anner
+            </span>
+          </Link>
+        </li>
+      </ul>
+      <ul id="service">
+        <li>
+          <Link className="service-button" to="/">
+            Home
           </Link>
         </li>
         <li>
-          <button className="download-btn" onClick={handleDownloadImage}>
-            Download Image
-          </button>
+          <Link className="service-button" to="/">
+            기업 소개
+          </Link>
+        </li>
+        <li>
+          <Link className="service-button" to="/">
+            가격
+          </Link>
+        </li>
+        <li>
+          <Link className="service-button" to="/">
+            FAQ
+          </Link>
+        </li>
+      </ul>
+      <ul id="login">
+        <li>
+          <Link id="login-button" to="/">
+            {loginText}
+          </Link>
         </li>
       </ul>
     </nav>
