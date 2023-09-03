@@ -11,10 +11,7 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-}
-
-.shift-right {
-  margin-right: 250px;
+  padding-top: 20px;
 }
 
 .sidebar {
@@ -26,6 +23,5 @@ body {
   background-color: #f0f0f0;
   z-index: 2;
   padding: 20px;
-  transition: width 0.3s ease-in-out;
   overflow: auto;
 }

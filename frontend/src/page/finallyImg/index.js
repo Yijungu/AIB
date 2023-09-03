@@ -56,7 +56,7 @@ const LastPage = () => {
     <>
       <TopMenu imageUrl={imgTest} />
       <div id="last-page">
-        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+        <Sidebar isOpen={isSidebarOpen}>
           <h2>Sidebar Content</h2>
           <p>This is the content of the sidebar.</p>
         </Sidebar>
