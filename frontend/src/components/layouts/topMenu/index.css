@@ -50,6 +50,6 @@ li {
   text-decoration: none;
 }
 
-#aib-logo:hover, .service-button:hover, #login-button:hover {
+.service-button:hover, #login-button:hover {
   text-decoration: underline;
 }
