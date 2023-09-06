@@ -1,5 +1,7 @@
 import Router from "./router";
 import { createContext, useState, useEffect } from "react";
+import {store} from './config/reducer';
+import { Provider } from "react-redux";
 
 export const MyContext = createContext();
 
@@ -33,7 +35,7 @@ function App() {
   };
 
   return (
-    <MyContext.Provider value={value}>
+    <MyContext.Provider value={value} store={store}>
       <Router />
     </MyContext.Provider>
   );
