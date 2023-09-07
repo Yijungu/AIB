@@ -28,14 +28,13 @@ const LastPage = () => {
     ],
   };
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [imageSize, setImageSize] = useState({ width: "100%", height: "100%" });
 
   return (
     <>
       <TopMenu imageUrl={imgTest} />
       <div id="last-page">
-        <Sidebar isOpen={isSidebarOpen} />
+        <Sidebar/>
         <div
           className="image-container"
           style={{

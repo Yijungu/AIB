@@ -1,19 +1,15 @@
 import React from "react";
 import "./index.css";
+import { TabList } from "../../tabs";
 
-export const Sidebar = ({ isOpen, toggleSidebar, children }) => {
+export const Sidebar = () => {
 
   return (
-    <div className={`sidebar ${isOpen ? "open" : ""}`}>
+    <div className="sidebar">
       <div className="content">
         <h2>색상</h2>
         <div>
-          <div>
-            <span>1. 검정</span>
-          </div>
-          <div>
-            <span>2. 빨강</span>
-          </div>
+          <TabList/>
         </div>
       </div>
     </div>

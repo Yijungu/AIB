@@ -35,9 +35,9 @@ function App() {
   };
 
   return (
-    <MyContext.Provider value={value} store={store}>
+    <Provider value={value} store={store}>
       <Router />
-    </MyContext.Provider>
+    </Provider>
   );
 }
 
