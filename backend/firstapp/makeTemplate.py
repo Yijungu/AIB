@@ -71,17 +71,17 @@ def textOnImage(before_img, texts, size, required_purposes, direction):
                 # Different handling based on the alignment
                 if alignment == "left":
                     for char in line:
-                        draw.text((x, y), char, font=font, fill=(0, 0, 0))
+                        draw.text((x, y), char, font=font, fill=(0,0,0))
                         x += font.getsize(char)[0] + kernings[i]
                 elif alignment == "right":
                     for char in reversed(line):
                         x -= font.getsize(char)[0] + kernings[i]
-                        draw.text((x, y), char, font=font, fill=(0, 0, 0))
+                        draw.text((x, y), char, font=font, fill=(0,0,0))
                 elif alignment == "center":
                     line_width = sum(font.getsize(char)[0] + kernings[i] for char in line)
                     x_start -= line_width / 2
                     for char in line:
-                        draw.text((x_start, y), char, font=font, fill=(0, 0, 0))
+                        draw.text((x_start, y), char, font=font, fill=(0,0,0))
                         x_start += font.getsize(char)[0] + kernings[i]
                 y += font.getsize('가')[1]
                 x = x_start
@@ -109,7 +109,6 @@ def resize_font(height, fontsize, size_ratio):
 
 def set_position(width, height, alignments, position, size_ratio, direction, biggest_line_width):
 
-    font_path = 'Hancom_Gothic_Bold.ttf'
     distance = 50
     new_position = (0,0)
 

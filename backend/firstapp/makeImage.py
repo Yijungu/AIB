@@ -5,11 +5,14 @@ import cv2
 import io
 import tensorflow_hub as hub
 
+import huggingface_hub
+
 from PIL import Image
 from .views import *
 from .makeTemplate import *
 from .serializers import TemplateSerializer
-from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler, DiffusionPipeline
+from transformers import AutoModel
 
 model_id = "runwayml/stable-diffusion-v1-5"
 
@@ -26,6 +29,10 @@ def makeStableDiffusion(answer, width, height) :
     pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
     pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
     pipe = pipe.to("cuda")
+    #access_token = "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"
+    #huggingface_hub.login(access_token)
+    #pipe = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-0.9", torch_dtype=torch.float16, use_safetensors=True, variant="fp16")
+    #pipe.enable_model_cpu_offload()
 
     pipe.enable_attention_slicing()
 
@@ -42,6 +49,12 @@ def makeStableDiffusion(answer, width, height) :
     croped_image.save("makeStableDiffusion.png")
 
     return croped_image
+
+    #prompt = "An astronaut riding a green horse"
+    #mage = pipe(prompt=prompt).images[0]
+    #image.save("webBanner.png")
+
+    return image
 
 
 

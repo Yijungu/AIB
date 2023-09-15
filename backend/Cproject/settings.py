@@ -99,6 +99,9 @@ DATABASES = {
         'PASSWORD': 'mypassword',  # 'myrootpassword'에서 'mypassword'로 변경
         'HOST': 'database',
         'PORT': '3306',
+        'TEST': {
+            'NAME': 'custom_test_database_name',
+        },
     }
 }
 

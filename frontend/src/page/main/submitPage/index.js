@@ -68,13 +68,17 @@ const SubmitPage = (props) => {
           include: second_text,
           contents: c,
         },
-        { responseType: "blob" }
+        { responseType: "json" }  // blob에서 json으로 바꿈
       );
 
-
-      const imageUrl = URL.createObjectURL(response.data);
-      console.log(imageUrl);
-      setImageUrl(imageUrl); // 이미지 URL을 상위 컴포넌트에 전달
+      const imageUrls = response.data.images;
+    //   for (const key in imageUrls) {
+    //     // 각 이미지에 대해 원하는 작업 수행
+    //     const encodedUrl = imageUrls[key];
+    //     console.log(encodedUrl); // 예시: 콘솔에 인코딩된 URL 출력
+    //  }
+      //console.log(imageUrl);
+      setImageUrl(imageUrls[2]); // 이미지 URL을 상위 컴포넌트에 전달
       navigate("/last");
       
       // const imgBlob = await response.data;

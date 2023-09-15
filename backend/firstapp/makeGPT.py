@@ -1,7 +1,7 @@
 import openai
 
-openai.api_key = ""
-gptModel = 'text-davinci-003'
+openai.api_key = "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"
+gptModel = "gpt-3.5-turbo"
 
 
 def translation(product) :
@@ -11,14 +11,19 @@ def translation(product) :
         model = gptModel
     )
     for result in response.choices:
-        return(result.text)
+        print(result.text)
 
 def line_breaker(text, line_break) :
     # chatGPT 연결
-    line_break += 1
-    response = openai.Completion.create(
-        prompt = text + "문장을 가장 자연스러운" + str(line_break) + "줄로 바꾸고 싶어 줄바꿈이 일어날 때 마다 \n을 추가해줘",
-        model = gptModel
+    line_break = 2
+    messages = []
+    answer = text + "문장을" + str(line_break) + "줄로 줄바꿈 해줘"
+    messages.append({"role" : "user", "content": answer})
+    completion = openai.ChatCompletion.create(
+      model = "gpt-3.5-turbo",
+      messages = messages
     )
-    for result in response.choices:
-        return(result.text)
+
+    chat_response = completion.choices[0].message.content
+    print(chat_response)
+    return chat_response

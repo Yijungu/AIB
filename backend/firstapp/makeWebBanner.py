@@ -4,11 +4,15 @@ from transformers import pipeline
 from .makeGPT import *
 from .makeImage import *
 from .makeTemplate import *
+from .backgroundColor import *
 
-def makeWebBanner(product, texts, size, purposes):
+def makeWebBanner(product, texts, size, purposes): #color, picture 인자 추가해야함
     texts, purposes = ordered(texts, purposes)
     width, height = map(int, size.split(':'))
     webBannerImage = makeStableDiffusion(product, width, height)
+
+    text_color = find_text_color(webBannerImage)
+
     #webBannerImage = Image.open("makeStableDiffusion.png")
     axis = calculate_axis(width, height)
     direction = detect(webBannerImage, axis) if axis != 'square' else detect_square(webBannerImage)
@@ -18,9 +22,9 @@ def makeWebBanner(product, texts, size, purposes):
     
     # direction = 'right'
     image, changed_texts, position, fontsize, kerning, alignments = textOnImage(webBannerImage, texts, size, purposes, direction)
-    #image.save("webBannerImage최종.png")
+    image.save("webBannerImage최종.png")
     # direction = 'right'
-    return image, changed_texts, position, fontsize, kerning, alignments
+    return image, changed_texts, position, fontsize, kerning, alignments, text_color
 
 def calculate_axis(width, height):
     # Split the input size into width and height and calculate the ratio
