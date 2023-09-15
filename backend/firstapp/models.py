@@ -45,3 +45,16 @@ class TextBox(models.Model):
     class Meta:
         db_table = 'TextBox'
 # Create your models here.
+
+def image_upload_path(instance, filename):
+    return f'{instance.post.id}/{filename}'
+
+class PostImage(models.Model):
+    id = models.AutoField(primary_key=True)
+    image = models.ImageField(upload_to=image_upload_path)
+
+    def __int__(self):
+        return self.id
+
+    class Meta:
+        db_table = 'post_image'
