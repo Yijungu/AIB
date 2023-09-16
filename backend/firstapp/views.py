@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
 from .makeWebBanner import makeWebBanner
-
+from django.core.files.storage import default_storage
 from PIL import Image
 
 import io
@@ -54,34 +54,40 @@ def test_view(request):
 
 @csrf_exempt
 def request_view(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        concept = data['concept']
-        include = data['include']
-        contents = data['contents']
-    
-        logo_picture = data['logo'] #사진은 어떤 타입으로 전송받아야되는지 모름
-        product_picture = data['product'] #사진은 어떤 타입으로 전송받아야되는지 모름
+     if request.method == 'POST':
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+            concept = data.get('concept')
+            include = data.get('include')
+            contents = data.get('contents', [])
+        else:
+            concept = request.POST.get('concept')
+            include = request.POST.get('include')
+            contents = json.loads(request.POST.get('contents', '[]'))
+        
+        print(contents)
+        logo_picture = request.FILES.get('logo')
+        product_picture = request.FILES.get('product')
 
-        #logo_picture 와 product_picture이 하나라도 있는 경우
-        if logo_picture != None or product_picture != None :
-
+        if logo_picture or product_picture:
             background_color_arr, text_color_arr = find_color(logo_picture, product_picture)
             response_data = {
                 'background_color': background_color_arr,
-                'text_color': text_color_arr
+                'text_color': text_color_arr,
             }
             return JsonResponse(response_data)
-            #전달
 
-        else :
-            # stable diffusion에서 만든 원본 사진 + 텍스트 색깔 => 배열로
+        else:
+            # 여기에 기존의 로직을 적용하시면 됩니다.
+            if isinstance(contents, str):
+                contents = json.loads(contents)
+
             texts = []
             purpose = []
 
-            for i in range(len(contents)):
-                texts.append(contents[i]['comment'])    
-                purpose.append(contents[i]['select'])
+            for content in contents:
+                texts.append(content['comment'])
+                purpose.append(content['select'])
 
             image, changed_texts, position, font_size, kerning, alignments = makeWebBanner(concept, texts, include, purpose) #color, picture 추가해야함
 
@@ -113,10 +119,6 @@ def request_view(request):
                 encoded_images.append(data_uri)
         return JsonResponse({'images': encoded_images})
         """
-    else:
-        print("bad")
-        # POST 요청이 아닌 경우, 에러 메시지를 보냅니다.
-        return JsonResponse({'error': 'Invalid method'}, status=    400)
 
 
 
