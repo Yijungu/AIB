@@ -6,7 +6,7 @@ from .makeImage import *
 from .makeTemplate import *
 from .backgroundColor import *
 
-def makeWebBanner(product, texts, size, purposes): #color, picture 인자 추가해야함
+def makeWebBannerImage(product, texts, size, purposes): #color, picture 인자 추가해야함
     texts, purposes = ordered(texts, purposes)
     width, height = map(int, size.split(':'))
     webBannerImage = makeStableDiffusion(product, width, height)
@@ -25,6 +25,20 @@ def makeWebBanner(product, texts, size, purposes): #color, picture 인자 추가
     image.save("webBannerImage최종.png")
     # direction = 'right'
     return image, changed_texts, position, fontsize, kerning, alignments, text_color
+
+def makeWebBannerPicture(product, texts, size, purposes): #color, picture 인자 추가해야함
+    texts, purposes = ordered(texts, purposes)
+    width, height = map(int, size.split(':'))
+
+    #webBannerImage = Image.open("makeStableDiffusion.png")
+    axis = calculate_axis(width, height)
+    # direction의 값은 left(up) center right(down) 중 하나
+    
+    # direction = 'right'
+    image, changed_texts, position, fontsize, kerning, alignments = textOnImage(np.zeros((width, height)), texts, size, purposes, 'right')
+    
+    # direction = 'right'
+    return changed_texts, position, fontsize, kerning, alignments
 
 def calculate_axis(width, height):
     # Split the input size into width and height and calculate the ratio

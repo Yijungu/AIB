@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
-from .makeWebBanner import makeWebBanner
+from .makeWebBanner import makeWebBannerImage, makeWebBannerPicture
 from django.core.files.storage import default_storage
 from PIL import Image
 
@@ -43,7 +43,7 @@ def test_view(request):
         purposes = request.POST.get('purposes').split(',')
         texts = request.POST.get('texts').split(',')
 
-        makeWebBanner(product, texts, size, purposes)
+        makeWebBannerImage(product, texts, size, purposes)
 
         # Get the list of generated image files
         image_files = [f for f in os.listdir() if f.startswith('WebBanner_')]
@@ -65,18 +65,35 @@ def request_view(request):
             include = request.POST.get('include')
             contents = json.loads(request.POST.get('contents', '[]'))
         
-        print(contents)
         logo_picture = request.FILES.get('logo')
         product_picture = request.FILES.get('product')
 
         if logo_picture or product_picture:
+
+            if isinstance(contents, str):
+                contents = json.loads(contents)
+
+            texts = []
+            purpose = []
+
+            for content in contents:
+                texts.append(content['comment'])
+                purpose.append(content['select'])
+
             background_color_arr, text_color_arr = find_color(logo_picture, product_picture)
+            changed_texts, position, font_size, kerning, alignments = makeWebBannerPicture(concept, texts, include, purpose)
+
             response_data = {
                 'background_color': background_color_arr,
                 'text_color': text_color_arr,
+                'changed_texts': changed_texts,
+                'position': position,
+                'font_size': font_size,
+                'kerning': kerning,
+                'alignments': alignments,
             }
-            return JsonResponse(response_data)
 
+            return JsonResponse(response_data)
         else:
             # 여기에 기존의 로직을 적용하시면 됩니다.
             if isinstance(contents, str):
@@ -89,7 +106,7 @@ def request_view(request):
                 texts.append(content['comment'])
                 purpose.append(content['select'])
 
-            image, changed_texts, position, font_size, kerning, alignments = makeWebBanner(concept, texts, include, purpose) #color, picture 추가해야함
+            image, changed_texts, position, font_size, kerning, alignments, text_color = makeWebBannerImage(concept, texts, include, purpose) #color, picture 추가해야함
 
             img_io = io.BytesIO()
             image.save(img_io, format='PNG')
@@ -101,7 +118,8 @@ def request_view(request):
                 'position': position,
                 'font_size': font_size,
                 'kerning': kerning,
-                'alignments': alignments
+                'alignments': alignments,
+                'text_color' : text_color
             }
 
             return JsonResponse(response_data)
