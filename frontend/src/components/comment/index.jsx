@@ -3,7 +3,7 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { Select } from "../selectGoal/select";
+import { Select } from "../selectGoal";
 
 export const Comment = (props) => {
   const [comments, setComments] = useState(props.comments || [""]);

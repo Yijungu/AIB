@@ -1,0 +1,10 @@
+.custom-dropdown {
+  border: 1px solid #ccc;
+  position: absolute;
+  width: 60%;
+}
+
+.custom-option {
+  padding: 8px;
+  cursor: pointer;
+}

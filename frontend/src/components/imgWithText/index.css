@@ -1,15 +1,3 @@
-.image-with-text {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.image-with-text img {
-  position: relative;
-}
-
 .image-with-text .text-wrapper {
   position: absolute;
   color: white;

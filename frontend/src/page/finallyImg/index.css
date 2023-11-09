@@ -1,48 +1,9 @@
 body {
-    background-color: #EEF5FF;
+  background-color: #ffffff;
 }
-#last-page {
-    position: relative;
-  }
-  
-  .image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-  
-  .sidebar {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 250px;
-    height: 100vh;
-    background-color: #f0f0f0;
-    z-index: 2;
-  }
-  
-  .content {
-    padding: 20px;
-  }
-  
-  .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .shift-right {
-    margin-right: 250px;
-  }
-  
-  .image {
-    margin-top: 50px;
-    max-width: 100%;
-    max-height: 100%;
-  }
-  
+
+.image-container {
+  display: flex;
+  padding-top: 200px;
+  padding-left: 400px;
+}

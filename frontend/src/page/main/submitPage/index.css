@@ -1,71 +1,11 @@
-#container-First {
-    padding: 3rem;
-    display: flex;
-    flex-direction: column;
+.entire_box {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
 }
 
-#logo{
-    display: flex;
-    justify-content: center;
-}
-
-.textareaauto {
-    margin-bottom: 3ch;
-    border: 2px solid rgb(0, 11, 255);
-    outline-color: rgb(100, 100, 255);
-    font-size: 12;
-    font-family: "NotoSerifWeb", "Noto Serif CJK Kr", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-}
-
-#comment-textareaauto {
-    margin-bottom: 0;
-}
-
-#form-question {
-    display: flex;
-    flex-direction: column;
-}
-
-#color-select {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.form-comment {
-    display: flex;
-    flex-direction: column;
-}
-
-.delete-button {
-    margin-bottom: 3ch;
-}
-
-#submit {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
-#submitButton {
-    border: 0px solid black;
-    border-radius: 8px;
-    background-color: rgb(200, 200, 255);
-    height: 5ch;
-    width: 10ch;
-    font-size: 1rem;
-    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
-}
-
-#form-select {
-    margin: 0;
-	min-width: 0;
-    min-height: 35px;
-	display: inline-flex;
-	padding: 8px 8px;
-	font-size: inherit;
-	line-height: inherit;
-	border: 1px solid;
-	border-radius: 4px;
-	color: inherit;
-	background-color: transparent;
+.main_box {
+  position: relative;
+  top: 120px;
 }

@@ -1,142 +1,141 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import "./index.css";
 
-// components
-import { questionData } from "../../../data/QuestionData";
-import { Question } from "../../../components/question/question";
-import { Label } from "../../../components/label/label";
-import { Comment } from "../../../components/comment/comment";
-import { Logo } from "../../../components/logo/logo";
-
-import { MyContext } from "../../../App";
+import { TopMenu } from "../../../components/layouts/topMenu";
+import InputWithLabel from "../../../components/inputWithLabel/InputWithLabel";
+import InputWithImage from "../../../components/inputWithLabel/InputWithImage";
+import DynamicInputPairManager from "../../../components/inputWithLabel/DynamicInputPairManager";
 
 const SubmitPage = (props) => {
-  const context = useContext(MyContext);
-  const {
-    imageUrl,
-    setImageUrl,
-    texts,
-    setTexts,
-    position,
-    setPosition,
-    fontSize,
-    setFontSize,
-    kerning,
-    setKerning,
-    alignments,
-    setAlignments,
-  } = context;
+  const [description, setDescription] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [color, setColor] = useState("");
+  const [imageFile, setImageFile] = useState(null); // InputWithImage의 state
+  const [dynamicInputs, setDynamicInputs] = useState([]);
 
-  const navigate = useNavigate();
-  const [text, setText] = useState({
-    first_text: "",
-    second_text: "",
-  });
-  const [contents, setContents] = useState([{ select: "", comment: "" }]);
-
-  const { first_text, second_text } = text;
-
-  const onTextChange = (e) => {
-    const { name, value } = e.target;
-    setText((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-  
-  const onContentsChange = (newComments, newSelects) => {
-    const newContent = { select: newSelects, comment: newComments };
-    setContents((prevState) => [...prevState, newContent]);
+  const handleImageChange = (file) => {
+    setImageFile(file);
   };
 
-  const onClickSubmit = async (e) => {
-    e.preventDefault();
+  const handleDynamicInputChange = (index, name, value) => {
+    const newDynamicInputs = [...dynamicInputs];
+    newDynamicInputs[index][name] = value;
+    setDynamicInputs(newDynamicInputs);
+  };
 
-    const c = contents[contents.length - 1].comment.map((comment, index) => ({
-      id: index,
-      select: contents[contents.length - 1].select[index],
-      comment: comment,
-    }));
+  const handleSubmit = async () => {
+    // 페이로드 생성
+    const payload = {
+      description,
+      width,
+      height,
+      color,
+      imageFile,
+      dynamicInputs,
+    };
+
+    const formData = new FormData();
+    Object.keys(payload).forEach((key) => {
+      formData.append(key, payload[key]);
+    });
+
+    // endpoint 설정
+    const endpoint = imageFile ? "request_picture_view" : "request_view";
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/aib_request/",
+        `http://your-server-endpoint.com/api/${endpoint}`,
+        formData,
         {
-          concept: first_text,
-          include: second_text,
-          contents: c,
-        },
-        { responseType: "json" }  // blob에서 json으로 바꿈
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
-      const imageUrls = response.data.images;
-    //   for (const key in imageUrls) {
-    //     // 각 이미지에 대해 원하는 작업 수행
-    //     const encodedUrl = imageUrls[key];
-    //     console.log(encodedUrl); // 예시: 콘솔에 인코딩된 URL 출력
-    //  }
-      //console.log(imageUrl);
-      setImageUrl(imageUrls[2]); // 이미지 URL을 상위 컴포넌트에 전달
-      navigate("/last");
-      
-      // const imgBlob = await response.data;
-      // const texts = JSON.parse(response.headers.get("texts"));
-      // const position = JSON.parse(response.headers.get("position"));
-      // const font_size = JSON.parse(response.headers.get("font_size"));
-      // const kerning = JSON.parse(response.headers.get("kerning"));
-      // const alignments = JSON.parse(response.headers.get("alignments"));
+      // 공통으로 사용되는 데이터
+      const { changed_texts, position, font_size, kerning, alignments } =
+        response.data;
 
-      // const imgURL = URL.createObjectURL(imgBlob);
-      
-      // setImageUrl(imgURL);
-      // setTexts(texts);
-      // setPosition(position);
-      // setFontSize(font_size);
-      // setKerning(kerning);
-      // setAlignments(alignments);
+      // 이 부분에 상태 업데이트 로직을 넣어주세요.
+
+      if (endpoint === "request_picture_view") {
+        const { background_color, text_color } = response.data;
+
+        // 이 경우만 처리하는 상태 업데이트
+        // ... (setState or dispatch 등을 사용)
+      } else {
+        const { image, text_color } = response.data;
+
+        // 이 경우만 처리하는 상태 업데이트
+        // ... (setState or dispatch 등을 사용)
+      }
     } catch (error) {
-      console.log(error);
+      console.log("An error occurred while sending data", error);
     }
   };
-
   return (
-    <>
-      <Logo />
-      <div id="container-First">
-        <div id="form-question">
-          <Label q={questionData[0]} />
-          <Question
-            q={questionData[0]}
-            name="first_text"
-            value={first_text}
-            onTextChange={onTextChange}
-          />
-          <br />
-          <Label q={questionData[1]} />
-          <Question
-            q={questionData[1]}
-            name="second_text"
-            value={second_text}
-            onTextChange={onTextChange}
-          />
-          <br />
-        </div>
-        <div id="form-comment">
-          <Label q={questionData[2]} />
-          <Comment onContentsChange={onContentsChange} />
-          <br />
-        </div>
-        <form>
-          <div id="submit">
-            <button id="submitButton" type="submit" onClick={onClickSubmit}>
-              Submit
-            </button>
+    <div className="entire_box">
+      <TopMenu />
+      <div className="main_box">
+        <InputWithLabel
+          label="광고하고 싶은 것에 대한 설명을 적어주세요."
+          placeholder="ex) 빠르게 맛있는 밥을 먹고 싶을 땐, 쿠쿠"
+          size={{ width: 450, height: 80 }}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <div
+          style={{
+            width: "200px",
+          }}
+        >
+          <p>사이즈를 입력하세요.</p>
+          <div
+            style={{
+              width: "200px",
+              height: "60px",
+            }}
+          >
+            <InputWithLabel
+              label=""
+              placeholder="가로"
+              size={{ width: 80, height: 15 }}
+              value={width}
+              onChange={(e) => setWidth(e.target.value)}
+            />
+            <InputWithLabel
+              label=""
+              placeholder="세로"
+              size={{ width: 80, height: 15 }}
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+            />
           </div>
-        </form>
+        </div>
+        <InputWithLabel
+          label="넣고 싶은 색이 있다면 입력해주세요."
+          placeholder="#000000"
+          size={{ width: 80, height: 15 }}
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+        />
+        <InputWithImage
+          label="상품 사진이 있으시다면 넣어주세요."
+          size={{ width: 300, height: 150 }}
+          onImageChange={handleImageChange}
+        />
+        <DynamicInputPairManager onInputChange={handleDynamicInputChange} />
+        <button
+          style={{ position: "relative", left: "430px", top: "50px" }}
+          onClick={handleSubmit}
+        >
+          제출
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,0 +1,14 @@
+.sidebar {
+  position: fixed;
+  top: 58.5px;
+  width: 250px;
+  height: 100vh;
+  padding: 20px;
+  border-right: 1px solid #cccccc;
+  background-color: #ffffff;
+  font-family: "Inter";
+}
+
+.content {
+  padding: 20px;
+}

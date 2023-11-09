@@ -68,75 +68,65 @@ def request_view(request):
         logo_picture = request.FILES.get('logo')
         product_picture = request.FILES.get('product')
 
-        if logo_picture or product_picture:
-
-            if isinstance(contents, str):
-                contents = json.loads(contents)
-
-            texts = []
-            purpose = []
-
-            for content in contents:
-                texts.append(content['comment'])
-                purpose.append(content['select'])
-
-            background_color_arr, text_color_arr = find_color(logo_picture, product_picture)
-            changed_texts, position, font_size, kerning, alignments = makeWebBannerPicture(concept, texts, include, purpose)
-
-            response_data = {
-                'background_color': background_color_arr,
-                'text_color': text_color_arr,
-                'changed_texts': changed_texts,
-                'position': position,
-                'font_size': font_size,
-                'kerning': kerning,
-                'alignments': alignments,
-            }
-
-            return JsonResponse(response_data)
-        else:
-            # 여기에 기존의 로직을 적용하시면 됩니다.
-            if isinstance(contents, str):
-                contents = json.loads(contents)
-
-            texts = []
-            purpose = []
-
-            for content in contents:
-                texts.append(content['comment'])
-                purpose.append(content['select'])
-
-            image, changed_texts, position, font_size, kerning, alignments, text_color = makeWebBannerImage(concept, texts, include, purpose) #color, picture 추가해야함
-
-            img_io = io.BytesIO()
-            image.save(img_io, format='PNG')
-            image_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
-
-            response_data = {
-                'image': image_base64,
-                'changed_texts': changed_texts,
-                'position': position,
-                'font_size': font_size,
-                'kerning': kerning,
-                'alignments': alignments,
-                'text_color' : text_color
-            }
-
-            return JsonResponse(response_data)
+        if isinstance(contents, str):
+            contents = json.loads(contents)
+        texts = []
+        purpose = []
+        for content in contents:
+            texts.append(content['comment'])
+            purpose.append(content['select'])
+        image, changed_texts, position, font_size, kerning, alignments, text_color = makeWebBannerImage(concept, texts, include, purpose) #color, picture 추가해야함
+        img_io = io.BytesIO()
+        image.save(img_io, format='PNG')
+        image_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
+        response_data = {
+            'image': image_base64,
+            'changed_texts': changed_texts,
+            'position': position,
+            'font_size': font_size,
+            'kerning': kerning,
+            'alignments': alignments,
+            'text_color' : text_color
+        }
+        return JsonResponse(response_data)
         
 
-        """
-        image_files = ['test1.png', 'test2.png', 'best.png']  # 이미지 파일들의 경로 리스트
-    
-        encoded_images = []
-        for file_path in image_files:
-            with open(file_path, 'rb') as image_file:
-                encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-                mime_type = 'png'  # 이미지 타입에 맞게 설정
-                data_uri = f'data:{mime_type};base64,{encoded_image}'
-                encoded_images.append(data_uri)
-        return JsonResponse({'images': encoded_images})
-        """
+def request_picture_view(request):
+    if request.method == 'POST':
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+            concept = data.get('concept')
+            include = data.get('include')
+            contents = data.get('contents', [])
+        else:
+            concept = request.POST.get('concept')
+            include = request.POST.get('include')
+            contents = json.loads(request.POST.get('contents', '[]'))
+        
+        logo_picture = request.FILES.get('logo')
+        product_picture = request.FILES.get('product')
+
+        
+
+        if isinstance(contents, str):
+            contents = json.loads(contents)
+        texts = []
+        purpose = []
+        for content in contents:
+            texts.append(content['comment'])
+            purpose.append(content['select'])
+        background_color_arr, text_color_arr = find_color(logo_picture, product_picture)
+        changed_texts, position, font_size, kerning, alignments = makeWebBannerPicture(concept, texts, include, purpose)
+        response_data = {
+            'background_color': background_color_arr,
+            'text_color': text_color_arr,
+            'changed_texts': changed_texts,
+            'position': position,
+            'font_size': font_size,
+            'kerning': kerning,
+            'alignments': alignments,
+        }
+        return JsonResponse(response_data)
 
 
 
