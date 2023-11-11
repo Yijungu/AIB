@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import "./InputWithLabel.css";
 
-const InputWithLabel = ({ label, placeholder, options, size }) => {
+const InputWithLabel = ({
+  label,
+  placeholder,
+  options,
+  size,
+  value,
+  onChange,
+}) => {
   const [showOptions, setShowOptions] = useState(false);
   const width = size?.width || "auto";
   const height = size?.height || "auto";
@@ -11,6 +18,8 @@ const InputWithLabel = ({ label, placeholder, options, size }) => {
       <p>{label}</p>
       <input
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         style={{ width: `${width}px`, height: `${height}px` }}
         onFocus={() => setShowOptions(!!options)}
         onBlur={() => setShowOptions(false)}

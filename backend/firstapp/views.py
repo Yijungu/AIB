@@ -1,17 +1,13 @@
-import openai
-from .makeGPT import *
+# from .makeGPT import *
 from .backgroundColor import *
 
 from django.shortcuts import render, HttpResponse
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from django.http import Http404, JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
-from .makeWebBanner import makeWebBannerImage, makeWebBannerPicture
+# from .makeWebBanner import makeWebBannerImage, makeWebBannerPicture
 from django.core.files.storage import default_storage
 from PIL import Image
 
@@ -43,7 +39,7 @@ def test_view(request):
         purposes = request.POST.get('purposes').split(',')
         texts = request.POST.get('texts').split(',')
 
-        makeWebBannerImage(product, texts, size, purposes)
+        # makeWebBannerImage(product, texts, size, purposes)
 
         # Get the list of generated image files
         image_files = [f for f in os.listdir() if f.startswith('WebBanner_')]
@@ -55,30 +51,54 @@ def test_view(request):
 @csrf_exempt
 def request_view(request):
      if request.method == 'POST':
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-            concept = data.get('concept')
-            include = data.get('include')
-            contents = data.get('contents', [])
-        else:
-            concept = request.POST.get('concept')
-            include = request.POST.get('include')
-            contents = json.loads(request.POST.get('contents', '[]'))
-        
-        logo_picture = request.FILES.get('logo')
-        product_picture = request.FILES.get('product')
+        description = request.POST.get('description')
+        width = request.POST.get('width')
+        height = request.POST.get('height')
+        color = request.POST.get('color')
+        # 파일은 request.FILES를 통해 접근합니다.
+        logo_image_file = request.FILES.get('logoImageFile')
+        image_file = request.FILES.get('imageFile')
+        dynamic_inputs_str = request.POST.get('dynamicInputs')
 
-        if isinstance(contents, str):
-            contents = json.loads(contents)
+        print("Description:", description)
+        print("Width:", width)
+        print("Height:", height)
+        print("Color:", color)
+
+        # 파일 출력
+        if logo_image_file:
+            print("Logo Image File:", logo_image_file.name)
+        if image_file:
+            print("Image File:", image_file.name)
+
+        # JSON 문자열 출력
+        print("Dynamic Inputs:", dynamic_inputs_str)
+
         texts = []
         purpose = []
-        for content in contents:
-            texts.append(content['comment'])
-            purpose.append(content['select'])
-        image, changed_texts, position, font_size, kerning, alignments, text_color = makeWebBannerImage(concept, texts, include, purpose) #color, picture 추가해야함
+        
+        # dynamicInputs가 제공되었는지 확인합니다.
+        if dynamic_inputs_str:
+            dynamic_inputs = json.loads(dynamic_inputs_str)
+
+            # 각 항목에서 name과 value를 추출하여 배열에 저장합니다.
+            for item in dynamic_inputs:
+                texts.append(item.get('name'))
+                purpose.append(item.get('value'))
+
+        size = width, ":", height
+        
+        # image, changed_texts, position, font_size, kerning, alignments, text_color = makeWebBannerImage(description, texts, size, purpose) #color, picture 추가해야함
+        image = Image.open("beach.png")
         img_io = io.BytesIO()
         image.save(img_io, format='PNG')
         image_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
+        changed_texts = ["AIB 프로젝트의", "데모버젼 실험 데이터", "성공 기원"]
+        position = [(400,200), (500,250), (800,340)]
+        font_size = [50, 25, 20]
+        kerning = [0.325, 0.793, 0.842]
+        alignments = ["left"]
+        text_color = [(30,43,103), (255,212,0), (191,255,0)]
         response_data = {
             'image': image_base64,
             'changed_texts': changed_texts,
@@ -90,33 +110,53 @@ def request_view(request):
         }
         return JsonResponse(response_data)
         
-
+@csrf_exempt
 def request_picture_view(request):
     if request.method == 'POST':
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-            concept = data.get('concept')
-            include = data.get('include')
-            contents = data.get('contents', [])
-        else:
-            concept = request.POST.get('concept')
-            include = request.POST.get('include')
-            contents = json.loads(request.POST.get('contents', '[]'))
-        
-        logo_picture = request.FILES.get('logo')
-        product_picture = request.FILES.get('product')
+        description = request.POST.get('description')
+        width = request.POST.get('width')
+        height = request.POST.get('height')
+        color = request.POST.get('color')
+        # 파일은 request.FILES를 통해 접근합니다.
+        logo_image_file = request.FILES.get('logoImageFile')
+        image_file = request.FILES.get('imageFile')
+        dynamic_inputs_str = request.POST.get('dynamicInputs')
 
-        
+        print("Description:", description)
+        print("Width:", width)
+        print("Height:", height)
+        print("Color:", color)
 
-        if isinstance(contents, str):
-            contents = json.loads(contents)
+        # 파일 출력
+        if logo_image_file:
+            print("Logo Image File:", logo_image_file.name)
+        if image_file:
+            print("Image File:", image_file.name)
+
+        # JSON 문자열 출력
+        print("Dynamic Inputs:", dynamic_inputs_str)
+
         texts = []
         purpose = []
-        for content in contents:
-            texts.append(content['comment'])
-            purpose.append(content['select'])
-        background_color_arr, text_color_arr = find_color(logo_picture, product_picture)
-        changed_texts, position, font_size, kerning, alignments = makeWebBannerPicture(concept, texts, include, purpose)
+        
+        # dynamicInputs가 제공되었는지 확인합니다.
+        if dynamic_inputs_str:
+            dynamic_inputs = json.loads(dynamic_inputs_str)
+
+            # 각 항목에서 name과 value를 추출하여 배열에 저장합니다.
+            for item in dynamic_inputs:
+                texts.append(item.get('name'))
+                purpose.append(item.get('value'))
+
+        size = width, ":", height
+
+        background_color_arr, text_color_arr = find_color(logo_image_file, image_file)
+        # changed_texts, position, font_size, kerning, alignments = makeWebBannerPicture(description, texts, include, purpose)
+        changed_texts = ["AIB 프로젝트의", "데모버젼 실험 데이터", "성공 기원"]
+        position = [(400,200), (500,250), (800,340)]
+        font_size = [50, 25, 20]
+        kerning = [0.325, 0.793, 0.842]
+        alignments = ["left"]
         response_data = {
             'background_color': background_color_arr,
             'text_color': text_color_arr,

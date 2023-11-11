@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InputPairWithLabel from "./InputPairWithLabel";
 
-const DynamicInputPairManager = () => {
+const DynamicInputPairManager = ({ onInputChange }) => {
   const [inputPairs, setInputPairs] = useState([{ id: new Date().getTime() }]);
 
   const addInputPair = () => {
@@ -21,6 +21,9 @@ const DynamicInputPairManager = () => {
           key={inputPair.id}
           label={`항목 ${index + 1}`}
           options={["큰 홍보문구", "작은 홍보문구", "상세내용", "장소 & 일시"]}
+          onInputChange={(inputType, value) =>
+            onInputChange(index, inputType, value)
+          }
           removeInputPair={
             index !== 0 ? () => removeInputPair(inputPair.id) : undefined
           }

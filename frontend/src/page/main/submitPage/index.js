@@ -12,16 +12,36 @@ const SubmitPage = (props) => {
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [color, setColor] = useState("");
+  const [logoImageFile, setLogoImageFile] = useState(null); // InputWithImage의 state
   const [imageFile, setImageFile] = useState(null); // InputWithImage의 state
   const [dynamicInputs, setDynamicInputs] = useState([]);
+
+  const [image, setImage] = useState("");
+  const [changedTexts, setChangedTexts] = useState([]);
+  const [position, setPosition] = useState([]);
+  const [fontSize, setFontSize] = useState([]);
+  const [kerning, setKerning] = useState([]);
+  const [alignments, setAlignments] = useState([]);
+  const [textColor, setTextColor] = useState([]);
+  const [background_color, setBackGroundColor] = useState([]);
 
   const handleImageChange = (file) => {
     setImageFile(file);
   };
 
+  const handleLogoImageChange = (file) => {
+    setLogoImageFile(file);
+  };
+
   const handleDynamicInputChange = (index, name, value) => {
+    console.log("Index:", index, "Name:", name, "Value:", value);
     const newDynamicInputs = [...dynamicInputs];
+    if (!newDynamicInputs[index]) {
+      newDynamicInputs[index] = {};
+    }
+
     newDynamicInputs[index][name] = value;
+
     setDynamicInputs(newDynamicInputs);
   };
 
@@ -32,9 +52,18 @@ const SubmitPage = (props) => {
       width,
       height,
       color,
+      logoImageFile,
       imageFile,
-      dynamicInputs,
+      dynamicInputs: JSON.stringify(dynamicInputs),
     };
+
+    console.log(description);
+    console.log(width);
+    console.log(height);
+    console.log(color);
+    console.log(logoImageFile);
+    console.log(imageFile);
+    console.log(dynamicInputs);
 
     const formData = new FormData();
     Object.keys(payload).forEach((key) => {
@@ -46,7 +75,7 @@ const SubmitPage = (props) => {
 
     try {
       const response = await axios.post(
-        `http://your-server-endpoint.com/api/${endpoint}`,
+        `http://localhost:8000/api/${endpoint}/`,
         formData,
         {
           headers: {
@@ -54,24 +83,28 @@ const SubmitPage = (props) => {
           },
         }
       );
-
-      // 공통으로 사용되는 데이터
-      const { changed_texts, position, font_size, kerning, alignments } =
-        response.data;
-
-      // 이 부분에 상태 업데이트 로직을 넣어주세요.
-
+      const data = response.data;
+      setChangedTexts(data.changed_texts);
+      setPosition(data.position);
+      setFontSize(data.font_size);
+      setKerning(data.kerning);
+      setAlignments(data.alignments);
+      setTextColor(data.text_color);
       if (endpoint === "request_picture_view") {
-        const { background_color, text_color } = response.data;
-
-        // 이 경우만 처리하는 상태 업데이트
-        // ... (setState or dispatch 등을 사용)
+        setBackGroundColor(data.background_color);
       } else {
-        const { image, text_color } = response.data;
-
-        // 이 경우만 처리하는 상태 업데이트
-        // ... (setState or dispatch 등을 사용)
+        setImage(data.image);
       }
+      console.log("Updated States:", {
+        changedTexts: data.changed_texts,
+        position: data.position,
+        fontSize: data.font_size,
+        kerning: data.kerning,
+        alignments: data.alignments,
+        textColor: data.text_color,
+        backgroundColor: data.background_color,
+        image: data.image,
+      });
     } catch (error) {
       console.log("An error occurred while sending data", error);
     }
@@ -121,6 +154,11 @@ const SubmitPage = (props) => {
           size={{ width: 80, height: 15 }}
           value={color}
           onChange={(e) => setColor(e.target.value)}
+        />
+        <InputWithImage
+          label="로고 사진이 있으시다면 넣어주세요."
+          size={{ width: 300, height: 150 }}
+          onImageChange={handleLogoImageChange}
         />
         <InputWithImage
           label="상품 사진이 있으시다면 넣어주세요."

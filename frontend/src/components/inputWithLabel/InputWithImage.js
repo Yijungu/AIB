@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import ImageInput from "../../image/imageInput.png";
 
-const InputWithImage = ({ label, size }) => {
+const InputWithImage = ({ label, size, onImageChange }) => {
   const fileInputRef = useRef(null);
 
   const handleDragOver = (e) => {
@@ -17,8 +17,8 @@ const InputWithImage = ({ label, size }) => {
   };
 
   const handleFiles = (files) => {
-    // 파일 처리 로직 (예: 파일을 서버에 업로드)
-    console.log(files);
+    console.log(files); // 파일 로그 출력
+    onImageChange(files[0]); // 첫 번째 파일을 상위 컴포넌트로 전달
   };
 
   const handleClick = () => {
@@ -27,9 +27,7 @@ const InputWithImage = ({ label, size }) => {
 
   const handleChange = (e) => {
     const files = e.target.files;
-    if (files.length > 0) {
-      handleFiles(files);
-    }
+    handleFiles(files);
   };
 
   return (
