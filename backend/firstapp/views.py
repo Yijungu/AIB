@@ -1,4 +1,4 @@
-# from .makeGPT import *
+from .makeGPT import *
 from .backgroundColor import *
 
 from django.shortcuts import render, HttpResponse
@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import TextBoxSerializer, TemplateSerializer
 from .models import TextBox,Template
-# from .makeWebBanner import makeWebBannerImage, makeWebBannerPicture
+from .makeWebBanner import makeWebBannerImage, makeWebBannerPicture
 from django.core.files.storage import default_storage
 from PIL import Image
 
@@ -88,25 +88,30 @@ def request_view(request):
 
         size = width, ":", height
         
-        # image, changed_texts, position, font_size, kerning, alignments, text_color = makeWebBannerImage(description, texts, size, purpose) #color, picture 추가해야함
-        image = Image.open("beach.png")
-        img_io = io.BytesIO()
-        image.save(img_io, format='PNG')
-        image_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
-        changed_texts = ["AIB 프로젝트의", "데모버젼 실험 데이터", "성공 기원"]
-        position = [(400,200), (500,250), (800,340)]
-        font_size = [50, 25, 20]
-        kerning = [0.325, 0.793, 0.842]
-        alignments = ["left"]
-        text_color = [(30,43,103), (255,212,0), (191,255,0)]
+        webBannerImages, changed_texts, positions, fontsizes, kernings, alignments, text_colors_for_all_images = makeWebBannerImage(description, texts, size, purpose) #color, picture 추가해야함
+        
+        base64_images = []
+        for img in webBannerImages:
+            img_io = io.BytesIO()
+            img.save(img_io, format='PNG')
+            img_io.seek(0)
+            image_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
+            base64_images.append(image_base64)
+
+        # changed_texts = ["AIB 프로젝트의", "데모버젼 실험 데이터", "성공 기원"]
+        # position = [(400,200), (500,250), (800,340)]
+        # font_size = [50, 25, 20]
+        # kerning = [0.325, 0.793, 0.842]
+        # alignments = ["left"]
+        # text_color = [(30,43,103), (255,212,0), (191,255,0)]
         response_data = {
-            'image': image_base64,
+            'image': base64_images,
             'changed_texts': changed_texts,
-            'position': position,
-            'font_size': font_size,
-            'kerning': kerning,
+            'position': positions,
+            'font_size': fontsizes,
+            'kerning': kernings,
             'alignments': alignments,
-            'text_color' : text_color
+            'text_color' : text_colors_for_all_images
         }
         return JsonResponse(response_data)
         
@@ -151,19 +156,19 @@ def request_picture_view(request):
         size = width, ":", height
 
         background_color_arr, text_color_arr = find_color(logo_image_file, image_file)
-        # changed_texts, position, font_size, kerning, alignments = makeWebBannerPicture(description, texts, include, purpose)
-        changed_texts = ["AIB 프로젝트의", "데모버젼 실험 데이터", "성공 기원"]
-        position = [(400,200), (500,250), (800,340)]
-        font_size = [50, 25, 20]
-        kerning = [0.325, 0.793, 0.842]
-        alignments = ["left"]
+        changed_texts, positions, fontsizes, kernings, alignments= makeWebBannerPicture(description, texts, include, purpose)
+        # changed_texts = ["AIB 프로젝트의", "데모버젼 실험 데이터", "성공 기원"]
+        # position = [(400,200), (500,250), (800,340)]
+        # font_size = [50, 25, 20]
+        # kerning = [0.325, 0.793, 0.842]
+        # alignments = ["left"]
         response_data = {
             'background_color': background_color_arr,
             'text_color': text_color_arr,
             'changed_texts': changed_texts,
-            'position': position,
-            'font_size': font_size,
-            'kerning': kerning,
+            'position': positions,
+            'font_size': fontsizes,
+            'kerning': kernings,
             'alignments': alignments,
         }
         return JsonResponse(response_data)

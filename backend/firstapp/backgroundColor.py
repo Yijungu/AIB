@@ -100,15 +100,19 @@ def find_color(image1_file=None, image2_file=None):
 
     return background_color_arr, text_color_arr
 
-def find_text_color(baground_image=None):
-    with BytesIO() as temp_io1:
-        baground_image.save(temp_io1, format='PNG')
-        temp_io1.seek(0)
-        dominant_colors = get_common_dominant_colors(temp_io1, n_colors=3)     
-        text_color_arr = []    
-        for color in dominant_colors:   
-            text_color = recommend_text_color_complementary(color)
-            text_color_arr.append(text_color)
+def find_text_color(background_images):
+    text_colors_for_all_images = []
 
-        return text_color_arr
-    
+    for bg_image in background_images:
+        with BytesIO() as temp_io:
+            bg_image.save(temp_io, format='PNG')
+            temp_io.seek(0)
+            dominant_colors = get_common_dominant_colors(temp_io, n_colors=3)     
+            text_color_arr = []    
+            for color in dominant_colors:   
+                text_color = recommend_text_color_complementary(color)
+                text_color_arr.append(text_color)
+
+            text_colors_for_all_images.append(text_color_arr)
+
+    return text_colors_for_all_images

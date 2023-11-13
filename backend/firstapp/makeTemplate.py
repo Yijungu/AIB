@@ -187,3 +187,49 @@ def get_nearest_size(input_size, direction):
             return '500:500-X'
         else :
             return '500:500-Y'
+        
+def process_text_on_images(webBannerImages, texts, size, purposes, directions):
+    images = []
+    changed_texts_list = []
+    positions = []
+    fontsizes = []
+    kernings = []
+    alignments_list = []
+
+    for webBannerImage, direction in zip(webBannerImages, directions):
+        image, changed_texts, position, fontsize, kerning, alignment = textOnImage(
+            webBannerImage, texts, size, purposes, direction
+        )
+
+        images.append(image)
+        changed_texts_list.append(changed_texts)
+        positions.append(position)
+        fontsizes.append(fontsize)
+        kernings.append(kerning)
+        alignments_list.append(alignment)
+
+    return images, changed_texts_list, positions, fontsizes, kernings, alignments_list
+
+def process_text_on_images_with_axis(width, height, texts, size, purposes, axis):
+    images = []
+    changed_texts_list = []
+    positions = []
+    fontsizes = []
+    kernings = []
+    alignments_list = []
+
+    directions = ['right', 'left'] if axis in ['x', 'square'] else ['up', 'down']
+
+    for direction in directions:
+        image, changed_texts, position, fontsize, kerning, alignments = textOnImage(
+            np.zeros((width, height)), texts, size, purposes, direction
+        )
+
+        images.append(image)
+        changed_texts_list.append(changed_texts)
+        positions.append(position)
+        fontsizes.append(fontsize)
+        kernings.append(kerning)
+        alignments_list.append(alignments)
+
+    return images, changed_texts_list, positions, fontsizes, kernings, alignments_list

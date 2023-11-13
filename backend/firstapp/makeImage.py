@@ -74,6 +74,19 @@ def add_white_background(before_img):
 
     return white_background
 
+def process_images_directions(webBannerImages, axis):
+    directions = []
+
+    for webBannerImage in webBannerImages:
+        if axis != 'square':
+            direction = detect(webBannerImage, axis)
+        else:
+            direction = detect_square(webBannerImage)
+
+        directions.append(direction)
+
+    return directions
+
 def detect(image_data, axis):
     image_byte_arr = io.BytesIO()
     image_data.save(image_byte_arr, format='PNG')
@@ -291,3 +304,4 @@ def gaussian_2d(x, y, mu_x, mu_y, sigma_x, sigma_y):
     term2 = np.exp(-((x - mu_x) ** 2) / (2 * sigma_x ** 2))
     term3 = np.exp(-((y - mu_y) ** 2) / (2 * sigma_y ** 2))
     return term1 * term2 * term3
+

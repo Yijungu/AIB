@@ -9,22 +9,23 @@ from .backgroundColor import *
 def makeWebBannerImage(product, texts, size, purposes): #color, picture 인자 추가해야함
     texts, purposes = ordered(texts, purposes)
     width, height = map(int, size.split(':'))
-    webBannerImage = makeStableDiffusion(product, width, height)
+    webBannerImages = makeStableDiffusion(product, width, height)
 
-    text_color = find_text_color(webBannerImage)
+    text_colors_for_all_images = find_text_color(webBannerImages)
 
-    #webBannerImage = Image.open("makeStableDiffusion.png")
+    # webBannerImage = Image.open("makeStableDiffusion.png")
     axis = calculate_axis(width, height)
-    direction = detect(webBannerImage, axis) if axis != 'square' else detect_square(webBannerImage)
+    directions = process_images_directions(webBannerImages, axis)
     # direction의 값은 left(up) center right(down) 중 하나
-    webBannerImage = transparency2(webBannerImage, direction, axis)
-    webBannerImage = add_white_background(webBannerImage)
+    # webBannerImage = transparency2(webBannerImage, direction, axis)
+    # webBannerImage = add_white_background(webBannerImage)
     
     # direction = 'right'
-    image, changed_texts, position, fontsize, kerning, alignments = textOnImage(webBannerImage, texts, size, purposes, direction)
-    image.save("webBannerImage최종.png")
+    images, changed_texts, positions, fontsizes, kernings, alignments = process_text_on_images(
+    webBannerImages, texts, size, purposes, directions
+)
     # direction = 'right'
-    return image, changed_texts, position, fontsize, kerning, alignments, text_color
+    return webBannerImages, changed_texts, positions, fontsizes, kernings, alignments, text_colors_for_all_images
 
 def makeWebBannerPicture(product, texts, size, purposes): #color, picture 인자 추가해야함
     texts, purposes = ordered(texts, purposes)
@@ -35,10 +36,10 @@ def makeWebBannerPicture(product, texts, size, purposes): #color, picture 인자
     # direction의 값은 left(up) center right(down) 중 하나
     
     # direction = 'right'
-    image, changed_texts, position, fontsize, kerning, alignments = textOnImage(np.zeros((width, height)), texts, size, purposes, 'right')
+    images, changed_texts, positions, fontsizes, kernings, alignments = process_text_on_images_with_axis(np.zeros((width, height)), texts, size, purposes, axis)
     
     # direction = 'right'
-    return changed_texts, position, fontsize, kerning, alignments
+    return changed_texts, positions, fontsizes, kernings, alignments
 
 def calculate_axis(width, height):
     # Split the input size into width and height and calculate the ratio
