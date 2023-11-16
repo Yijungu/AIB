@@ -14,16 +14,16 @@ RUN pip install djangorestframework
 # RUN pip install diffusers --upgrade
 # RUN pip install invisible_watermark transformers accelerate safetensors
 
-RUN pip install opencv-python
-RUN pip install torchvision
-RUN pip install Pillow==9.5.0
-RUN pip install tensorflow
-RUN pip install tensorflow-hub
-RUN pip install scipy
-RUN pip install mysqlclient
+# RUN pip install opencv-python
+# RUN pip install torchvision
+# RUN pip install Pillow==9.5.0
+# RUN pip install tensorflow
+# RUN pip install tensorflow-hub
+# RUN pip install scipy
+# RUN pip install mysqlclient
 # RUN pip install "accelerate>=0.16.0,<1" "transformers[torch]>=4.28.1,<5" "torch>=1.13.1,<2"
-RUN apt-get update
-RUN apt-get -y install libgl1-mesa-glx
+# RUN apt-get update
+# RUN apt-get -y install libgl1-mesa-glx
 
 # RUN pip install transformers
 # RUN pip install accelerate
@@ -32,11 +32,11 @@ RUN apt-get -y install libgl1-mesa-glx
 
 # RUN pip install --upgrade huggingface_hub
 
-RUN pip install colorthief
-RUN pip install matplotlib
+# RUN pip install colorthief
+# RUN pip install matplotlib
 
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
-ENV NVIDIA_VISIBLE_DEVICES=all
+# ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+# ENV NVIDIA_VISIBLE_DEVICES=all
 # LABEL com.nvidia.volumes.needed="nvidia_driver"
 
 # 컨테이너 실행시 실행할 명령어
