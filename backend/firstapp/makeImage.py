@@ -41,14 +41,18 @@ def makeStableDiffusion(answer, width, height) :
 
     prompt = answer + ", painting, advertisement"
 
-    image = pipe(prompt, height=new_height, width=new_width, 
-                negative_prompt="text box, "+"people, "+"person, "+"face", guidance_scale=4).images[0]
+    images = pipe(prompt, height=new_height, width=new_width, num_images_per_prompt = 3,
+                negative_prompt="text box, "+"people, "+"person, "+"face", guidance_scale=4).images
     
-    croped_image = image.crop((0, 0, width, height))
 
-    croped_image.save("makeStableDiffusion.png")
 
-    return croped_image
+    for i in range(len(images)) :
+        images[i] = images[i].crop((0, 0, width, height))
+    
+    #croped_image.save("makeStableDiffusion1.png")
+    #croped_image2.save("makeStableDiffusion2.png")
+
+    return images
 
     #prompt = "An astronaut riding a green horse"
     #mage = pipe(prompt=prompt).images[0]

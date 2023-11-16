@@ -83,10 +83,10 @@ def request_view(request):
 
             # 각 항목에서 name과 value를 추출하여 배열에 저장합니다.
             for item in dynamic_inputs:
-                texts.append(item.get('name'))
-                purpose.append(item.get('value'))
+                texts.append(item.get('value'))
+                purpose.append(item.get('type'))
 
-        size = width, ":", height
+        size = width + ":" + height
         
         webBannerImages, changed_texts, positions, fontsizes, kernings, alignments, text_colors_for_all_images = makeWebBannerImage(description, texts, size, purpose) #color, picture 추가해야함
         
@@ -150,10 +150,10 @@ def request_picture_view(request):
 
             # 각 항목에서 name과 value를 추출하여 배열에 저장합니다.
             for item in dynamic_inputs:
-                texts.append(item.get('name'))
-                purpose.append(item.get('value'))
+                texts.append(item.get('value'))
+                purpose.append(item.get('type'))
 
-        size = width, ":", height
+        size = width + ":" + height
 
         background_color_arr, text_color_arr = find_color(logo_image_file, image_file)
         changed_texts, positions, fontsizes, kernings, alignments= makeWebBannerPicture(description, texts, include, purpose)
