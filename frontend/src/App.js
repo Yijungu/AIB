@@ -1,7 +1,7 @@
 import Router from "./router";
 import { createContext, useState, useEffect } from "react";
-// import store from "./config/store";
-// import { Provider } from "react-redux";
+import store from './config/store';
+import { Provider } from "react-redux";
 
 export const MyContext = createContext();
 
@@ -15,9 +15,9 @@ function App() {
   }, [imageUrl]);
 
   return (
-    // <Provider store={store}>
-    <Router />
-    // </Provider>
+    <Provider store={store}>
+      <Router />
+    </Provider>
   );
 }
 

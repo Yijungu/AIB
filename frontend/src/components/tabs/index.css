@@ -1,0 +1,16 @@
+
+#colorModify, #textModify {
+    font-family: "Inter";
+    color: #b1b1b1;
+    text-decoration: none;
+    
+}
+
+#colorModify:hover, #textModify:hover {
+    color: #504e4e;
+}
+
+#colorModify.on, #textModify.on {
+    font-weight: bold;
+    color: #000000;
+}
