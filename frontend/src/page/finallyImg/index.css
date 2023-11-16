@@ -1,0 +1,9 @@
+body {
+  background-color: #ffffff;
+}
+
+.image-container {
+  display: flex;
+  padding-top: 200px;
+  padding-left: 400px;
+}
