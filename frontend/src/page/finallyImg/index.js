@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./index.css";
 import { Layout } from "../../components/layouts";
-import { fetchData, getData } from "../../data/imgData";
 import { ImageAndText } from "../../components/ImageAndText";
 import { NonImageAndText } from "../../components/nonImageAndText";
 import { DownloadButton } from "../../components/downloadButton";
@@ -16,13 +15,11 @@ import {
   text_color,
   select_image_index,
 } from '../../data/testData';
+import { getData } from "../../data/imgData";
 
 const LastPage = () => {
-  // useEffect(() => { // data 비동기 로드
-  //   fetchData();
-  // }, []);
-
-  // const imgData = getData();
+  const ImageData = getData();
+  console.log("LastPage ImageData:", ImageData);
   const realTestImage = {
     imageBase64: image[select_image_index],
     texts: changed_texts[select_image_index],

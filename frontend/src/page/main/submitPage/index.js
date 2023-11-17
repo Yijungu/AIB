@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./index.css";
-
+import { setData } from "../../../data/imgData";
 import { TopMenu } from "../../../components/layouts/topMenu";
 import InputWithLabel from "../../../components/inputWithLabel/InputWithLabel";
 import InputWithImage from "../../../components/inputWithLabel/InputWithImage";
@@ -84,6 +84,7 @@ const SubmitPage = (props) => {
         }
       );
       const data = response.data;
+      setData(data);
       setChangedTexts(data.changed_texts);
       setPosition(data.position);
       setFontSize(data.font_size);
