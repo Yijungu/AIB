@@ -7,6 +7,7 @@ COPY package.json .
 
 # 이미지 생성 과정에서 실행할 명령어
 RUN npm install
+RUN npm install --save-dev @types/react-redux
 
 COPY . .
 

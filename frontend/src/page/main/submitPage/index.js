@@ -96,16 +96,7 @@ const SubmitPage = (props) => {
       } else {
         setImage(data.image);
       }
-      console.log("Updated States:", {
-        changedTexts: data.changed_texts,
-        position: data.position,
-        fontSize: data.font_size,
-        kerning: data.kerning,
-        alignments: data.alignments,
-        textColor: data.text_color,
-        backgroundColor: data.background_color,
-        image: data.image,
-      });
+      navigator("/select");
     } catch (error) {
       console.log("An error occurred while sending data", error);
     }
