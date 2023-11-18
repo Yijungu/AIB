@@ -25,6 +25,8 @@ def makeStableDiffusion(answer, width, height) :
     new_width =  width + (8 - width % 8)
     new_height =  height + (8 - height % 8)
     
+    batch_size = 16
+
     # Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead
     pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
     pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
