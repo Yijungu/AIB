@@ -6,6 +6,7 @@ import { TopMenu } from "../../../components/layouts/topMenu";
 import InputWithLabel from "../../../components/inputWithLabel/InputWithLabel";
 import InputWithImage from "../../../components/inputWithLabel/InputWithImage";
 import DynamicInputPairManager from "../../../components/inputWithLabel/DynamicInputPairManager";
+import { useNavigate } from "react-router-dom";
 
 const SubmitPage = (props) => {
   const [description, setDescription] = useState("");
@@ -24,6 +25,8 @@ const SubmitPage = (props) => {
   const [alignments, setAlignments] = useState([]);
   const [textColor, setTextColor] = useState([]);
   const [background_color, setBackGroundColor] = useState([]);
+
+  const navigator = useNavigate();
 
   const handleImageChange = (file) => {
     setImageFile(file);
