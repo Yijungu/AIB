@@ -2,7 +2,11 @@
 
 **AI를 이용한 웹배너 자동 생성**
 
+<div style="display: flex; gap: 20;">
 <img width="310" alt="image" src="https://github.com/user-attachments/assets/b1519d7a-d6c0-494b-83b1-b7f50efe9cae">
+<img width="310" alt="image" src="https://github.com/user-attachments/assets/af6d4b9f-e20c-4b90-988a-ace6930b87d5">
+<img width="310" alt="image" src="https://github.com/user-attachments/assets/e6fc0edf-bfe2-4aa4-bc07-c7758a0c61b9">
+</div>
 
 ## 개요
 **AIB**는 웹 배너를 자동으로 생성하는 AI 기반 서비스입니다. 이 프로젝트는 사용자가 손쉽게 배너를 제작할 수 있도록 지원하며, AI를 통해 배너 이미지 생성, 사물 위치 감지, 텍스트 배치 등의 과정을 자동화하였습니다.
